@@ -1,0 +1,3 @@
+C:/Users/csalhab/OneDrive/DoomdepthC/cmake-build-debug/CMakeFiles/DoomdepthC.dir
+C:/Users/csalhab/OneDrive/DoomdepthC/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/csalhab/OneDrive/DoomdepthC/cmake-build-debug/CMakeFiles/rebuild_cache.dir

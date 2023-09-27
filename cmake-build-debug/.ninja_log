@@ -1,0 +1,8 @@
+# ninja log v5
+82	491	7175356015317891	CMakeFiles/DoomdepthC.dir/equipment.c.obj	6bb1eabb15d06f33
+17	515	7175356015587895	CMakeFiles/DoomdepthC.dir/monster.c.obj	e9d9edfc3bc529b
+113	530	7175356015699553	CMakeFiles/DoomdepthC.dir/players.c.obj	4420bae11d2eae01
+493	668	7175356017177853	CMakeFiles/DoomdepthC.dir/spell.c.obj	fc10a93f54c20a7b
+1	4013	7175356050627719	CMakeFiles/DoomdepthC.dir/battle_phase.c.obj	8562ae9f15ca20eb
+30	4019	7175356050617728	CMakeFiles/DoomdepthC.dir/main.c.obj	1b01ff7027986d54
+96	4020	7175356050657725	CMakeFiles/DoomdepthC.dir/Game.c.obj	c02d07032a4038af
