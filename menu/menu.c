@@ -8,8 +8,62 @@ Projet DoomdepthC
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <string.h>
+
+
+void init_game() {
+
+    system("clear");
+
+    while (1) {
+
+        printf("\nMenu\n");
+        printf("1. Sart the game\n");
+        printf("0. Exit\n");
+
+        int choice;
+
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+
+            case 1:
+                system("clear");
+                display_menu();
+                break;
+
+            case 0:
+                system("clear");
+                // exit the program
+                printf("Are you sure? (y)es or (n)o ");
+
+                char decision;
+                scanf(" %c", &decision);
+
+                decision = toupper(decision);
+
+                if (decision == 'Y') {
+                    printf("\nGoodbye!\n");
+                    exit(0);
+                } else if (decision == 'N') {
+                    system("clear");
+                } else {
+                    system("clear");
+                    printf("You have to choose between yes (Y) or no (N)!\n");
+                }
+                break;
+
+            default:
+                system("clear");
+                printf("\nChoose between 0 and 1!\n");
+
+        }
+    }
+}
 
 void display_menu() {
+
     system("clear");
 
     char name[100];
@@ -59,7 +113,7 @@ void display_menu() {
             case 4:
                 system("clear");
                 // exit the program
-                printf("Are you sure? ");
+                printf("Are you sure? (y)es or (n)o ");
                 char decision;
                 scanf(" %c", &decision);
 
@@ -77,6 +131,7 @@ void display_menu() {
                 break;
 
             default:
+                system("clear");
                 printf("\nChoose between 0 and 4!\n");
         }
     }

@@ -11,7 +11,7 @@ Projet DoomdepthC
 #include "Game.c"
 
 int main() {
-      display_menu();
+      init_game();
 //    Player * player = new_player("Andre");
 //    weapon_starter_selection(player);
 //    Battle * battle = init_simple_battle(player);
