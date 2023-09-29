@@ -1,23 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct Spell
-{
-    char * name;
-    int type;
+typedef struct {
+    char * spell_name;
+    char * description;
+    int cost;
 
-    int mana_cons;
-
-    // If spell is offensive
-    int att;
-
-    // Buffs
-    float buff;
-
-    int buff_duration;
-    int coldown;
-
-}Spell;
+} Spell;
 
 Spell * init_spell(char*name,
                     int type,

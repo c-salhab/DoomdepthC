@@ -8,7 +8,7 @@ Projet DoomdepthC
 #include <stdlib.h>
 
 #include "menu/menu.c"
-#include "game/Game.c"
+//#include "game/Game.c"
 
 int main() {
       init_game();
