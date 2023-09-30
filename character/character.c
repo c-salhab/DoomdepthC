@@ -135,11 +135,29 @@ void restore(Character *character) {
     character->is_alive = 1;
 }
 
+int has_gear(){
+
+}
+
 void fight(Character *character, Monster **list_monster){
     system("clear");
 
     restore(character);
 
     printf("\n --- {%s} VS {The Monsters} ---\n", character->username);
+
+    int boolean = has_gear(character);
+
+    if(boolean == 1){
+        show_gear();
+    }else{
+        takes_gear();
+    }
+
+    int round = 1;
+
+    while(character->is_alive == 1 && list_monster){
+
+    }
 }
 
