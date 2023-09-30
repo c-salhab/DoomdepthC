@@ -146,13 +146,13 @@ void fight(Character *character, Monster **list_monster){
 
     printf("\n --- {%s} VS {The Monsters} ---\n", character->username);
 
-    int boolean = has_gear(character);
+    //int boolean = has_gear(character);
 
-    if(boolean == 1){
-        show_gear();
-    }else{
-        takes_gear();
-    }
+//    if(boolean == 1){
+//        //show_gear();
+//    }else{
+//        //takes_gear();
+//    }
 
     int round = 1;
 

@@ -9,6 +9,7 @@ Projet DoomdepthC
 #include "../headers/character.h"
 #include "../character/character.c"
 #include "../monsters/monsters.c"
+#include "../spells/spells.c"
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -107,7 +108,7 @@ void display_menu() {
         printf("0. Show Stats\n");
         printf("1. Fight\n");
         printf("2. Choose spells\n");
-        printf("3. Check Characters\n");
+        printf("3. Check Map\n");
         printf("4. Exit the game\n");
         printf("\n");
 
@@ -140,11 +141,12 @@ void display_menu() {
             case 2:
                 system("clear");
                 // choose spells
+                choose_another_spell(character);
                 break;
 
             case 3:
                 system("clear");
-                // check characters
+                // check map
                 break;
 
             case 4:

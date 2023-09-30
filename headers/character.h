@@ -7,8 +7,6 @@ Projet DoomdepthC
 #ifndef CHARACTER_H
 #define CHARACTER_H
 
-#include "../headers/monsters.h"
-
 typedef struct {
 
     char * username;
