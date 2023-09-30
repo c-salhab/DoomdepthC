@@ -128,15 +128,9 @@ void display_menu() {
             case 1:
                 system("clear");
                 Monster **monsters = generate_monster();
-                int i = 0;
-                while (monsters[i] != NULL) {
-                    printf("Monster[%d] = { life: %d, min_power: %d, max_power: %d, defense: %d }\n",
-                           i,
-                           monsters[i]->life,
-                           monsters[i]->min_power,
-                           monsters[i]->max_power,
-                           monsters[i]->defense);
-                    i++;
+
+                if(monsters){
+                    printf("hi");
                 }
 
                 break;
