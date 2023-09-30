@@ -5,6 +5,8 @@ Projet DoomdepthC
 */
 
 #include "../headers/menu.h"
+#include "../headers/monsters.h"
+#include "../headers/character.h"
 #include "../character/character.c"
 #include "../monsters/monsters.c"
 #include <stdio.h>
@@ -121,7 +123,7 @@ void display_menu() {
 
             case 0:
                 system("clear");
-                Character *character = init_character(name);
+                Character *character = init_character(name, 100, 100);
                 show_specs(character);
                 break;
 
@@ -130,7 +132,7 @@ void display_menu() {
                 Monster **monsters = generate_monster();
 
                 if(monsters){
-                    printf("hi");
+                   fight(character, monsters);
                 }
 
                 break;

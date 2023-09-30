@@ -4,6 +4,9 @@ Date : 27/09/2023
 Projet DoomdepthC
 */
 
+#ifndef MONSTERS_H
+#define MONSTERS_H
+
 typedef struct {
     int life;
     int min_power;
@@ -15,3 +18,5 @@ typedef struct {
 void init_monster(int life, int min_power, int max_power, int defense);
 
 Monster ** generate_monster();
+
+#endif

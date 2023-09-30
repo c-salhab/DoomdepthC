@@ -4,6 +4,11 @@ Date : 27/09/2023
 Projet DoomdepthC
 */
 
+#ifndef CHARACTER_H
+#define CHARACTER_H
+
+#include "../headers/monsters.h"
+
 typedef struct {
 
     char * username;
@@ -15,11 +20,17 @@ typedef struct {
     int level;
     int exp;
     int exp_needed_to_level_up;
+    float max_health;
+    float max_mana;
 //    Offensive *offensive_spell;
 //    Deffensive *defensive_spell;
 //    Heal *heal_spell;
 
 } Character;
 
-Character * init_character(char *name);
+Character * init_character(char *name, float max_health, float max_mana);
+
 void show_specs(Character *character);
+void fight(Character *character, Monster **list_monster);
+
+#endif

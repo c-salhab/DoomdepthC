@@ -5,16 +5,19 @@ Projet DoomdepthC
 */
 
 #include "../headers/character.h"
+#include "../headers/monsters.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-Character * init_character(char *name){
+Character * init_character(char *name, float max_health, float max_mana){
     Character *character = malloc(sizeof(Character));
     character->username = name;
     character->is_alive = 1;
-    character->health = 0;
-    character->mana = 0;
+    character->health = max_health;
+    character->mana = max_mana;
+    character->max_health = max_health;
+    character->max_mana = max_mana;
     character->level = 1;
     character->exp = 0;
     character->exp_needed_to_level_up = 50;
@@ -23,6 +26,7 @@ Character * init_character(char *name){
 
     return character;
 }
+
 
 void show_specs(Character *character){
 
@@ -123,5 +127,19 @@ void show_specs(Character *character){
     }
 
     printf("\n");
+}
+
+void restore(Character *character) {
+    character->health = character->max_health;
+    character->mana = character->max_mana;
+    character->is_alive = 1;
+}
+
+void fight(Character *character, Monster **list_monster){
+    system("clear");
+
+    restore(character);
+
+    printf("\n --- {%s} VS {The Monsters} ---\n", character->username);
 }
 
