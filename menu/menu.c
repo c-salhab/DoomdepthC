@@ -5,11 +5,11 @@ Projet DoomdepthC
 */
 
 #include "../headers/menu.h"
+#include "../character/character.c"
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
-
 
 void init_game() {
 
@@ -120,7 +120,8 @@ void display_menu() {
 
             case 0:
                 system("clear");
-                // show stats
+                Character *character = init_character(name);
+                show_specs(character);
                 break;
 
             case 1:

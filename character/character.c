@@ -1,0 +1,127 @@
+/*
+Created by : Charbel Salhab, Olivier Nart, Bao Nguyen Tran Duc
+Date : 27/09/2023
+Projet DoomdepthC
+*/
+
+#include "../headers/character.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+Character * init_character(char *name){
+    Character *character = malloc(sizeof(Character));
+    character->username = name;
+    character->is_alive = 1;
+    character->health = 0;
+    character->mana = 0;
+    character->level = 1;
+    character->exp = 0;
+    character->exp_needed_to_level_up = 50;
+    character->physical_strength = 0;
+    character->physical_defense = 0;
+
+    return character;
+}
+
+void show_specs(Character *character){
+
+    printf("\n");
+
+    for(int i = 0; i < 60; i++){
+        printf("X");
+    }
+
+    printf("\n");
+
+    char *str = "Informations on the Character ";
+    int size = strlen(str);
+
+    for(int i = 0; i < (60 - size) / 2; i++) {
+        printf("-");
+    }
+
+    printf("%s", str);
+
+    for(int i = 0; i < (60 - size) / 2; i++) {
+        printf("-");
+    }
+
+    printf("\n");
+
+    printf("Username : %s\n", character->username);
+    printf("Character's Level : %d\n", character->level);
+    printf("Xp [%d/%d] : ", character->exp, character->exp_needed_to_level_up);
+
+    int current_xp_indication = (character->exp * 30) / character->exp_needed_to_level_up;
+    int rest_needed_to_level_up = 30 - current_xp_indication;
+
+    printf("[");
+    for(int i = 0; i < current_xp_indication; i++){
+        printf("#");
+    }
+    printf("]\n");
+
+    str = "The stats : ";
+    size = strlen(str);
+
+    for(int i = 0; i < (60 - size) / 2; i++) {
+        printf("-");
+    }
+
+    printf("%s", str);
+
+    for(int i = 0; i < (60 - size) / 2; i++) {
+        printf("-");
+    }
+
+    printf("\n");
+
+    printf("Life : %.2f\n", character->health);
+    printf("Mana : %.2f\n", character->mana);
+    printf("Physical Force : %.2f\n", character->physical_strength);
+    printf("Physical Defense : %.2f\n", character->physical_defense);
+
+    str = "Spells : ";
+    size = strlen(str);
+
+    for(int i = 0; i < (60 - size) / 2; i++) {
+        printf("-");
+    }
+
+    printf("%s", str);
+
+    for(int i = 0; i < (60 - size) / 2; i++) {
+        printf("-");
+    }
+
+    printf("\n");
+
+    printf("Offensive : \n");
+    printf("Defensive : \n");
+    printf("Heal : \n");
+
+    str = "Gears : ";
+    size = strlen(str);
+
+    for(int i = 0; i < (60 - size) / 2; i++) {
+        printf("-");
+    }
+
+    printf("%s", str);
+
+    for(int i = 0; i < (60 - size) / 2; i++) {
+        printf("-");
+    }
+    printf("\n");
+
+    printf("Weapon : \n");
+    printf("Armor : \n");
+
+    for(int i = 0; i < 60; i++){
+        printf("X");
+    }
+
+    printf("\n");
+}
+
