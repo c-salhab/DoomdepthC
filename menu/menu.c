@@ -6,6 +6,7 @@ Projet DoomdepthC
 
 #include "../headers/menu.h"
 #include "../character/character.c"
+#include "../monsters/monsters.c"
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -126,7 +127,18 @@ void display_menu() {
 
             case 1:
                 system("clear");
-                // attack
+                Monster **monsters = generate_monster();
+                int i = 0;
+                while (monsters[i] != NULL) {
+                    printf("Monster[%d] = { life: %d, min_power: %d, max_power: %d, defense: %d }\n",
+                           i,
+                           monsters[i]->life,
+                           monsters[i]->min_power,
+                           monsters[i]->max_power,
+                           monsters[i]->defense);
+                    i++;
+                }
+
                 break;
 
             case 2:

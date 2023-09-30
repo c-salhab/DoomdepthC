@@ -12,6 +12,6 @@ typedef struct {
 } Monster;
 
 
-void init_monster(int life, int min_power, int max_power, int defense);
+Monster* init_monster(int life, int min_power, int max_power, int defense);
 
 Monster ** generate_monster();

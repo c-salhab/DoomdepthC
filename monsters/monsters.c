@@ -11,7 +11,7 @@ Projet DoomdepthC
 #include <time.h>
 
 
-void init_monster(int life, int min_power, int max_power, int defense) {
+Monster * init_monster(int life, int min_power, int max_power, int defense) {
 
     Monster * monster = malloc(sizeof(Monster));
 
@@ -23,29 +23,27 @@ void init_monster(int life, int min_power, int max_power, int defense) {
 }
 
 Monster ** generate_monster() {
-
     srand(time(NULL));
     int n = (rand() % 30) + 1;
 
-    Monster ** list_monster = malloc(sizeof(Monster*) * n);
+    Monster **list_monster = malloc(sizeof(Monster*) * (n + 1));
 
     for(int i = 0; i < n; i++) {
         list_monster[i] = malloc(sizeof(Monster));
 
-        srand(time(NULL));
         int life = (rand() % 100) + 1;
-
-        srand(time(NULL));
         int min_power = (rand() % 50) + 1;
-
-        srand(time(NULL));
         int max_power = (rand() % 100) + 1;
-
-        srand(time(NULL));
         int defense = (rand() % 100) + 1;
 
-        list_monster[i] = init_monster(life, min_power, max_power, defense);
+        list_monster[i]->life = life;
+        list_monster[i]->min_power = min_power;
+        list_monster[i]->max_power = max_power;
+        list_monster[i]->defense = defense;
     }
+
+    list_monster[n] = NULL;
 
     return list_monster;
 }
+
