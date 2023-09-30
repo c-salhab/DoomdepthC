@@ -11,7 +11,7 @@ Projet DoomdepthC
 #include <time.h>
 
 
-Monster * init_monster(int life, int min_power, int max_power, int defense) {
+void init_monster(int life, int min_power, int max_power, int defense) {
 
     Monster * monster = malloc(sizeof(Monster));
 
