@@ -8,12 +8,7 @@ Projet DoomdepthC
 #include <stdlib.h>
 
 #include "menu/menu.c"
-//#include "game/Game.c"
 
 int main() {
       init_game();
-//    Player * player = new_player("Andre");
-//    weapon_starter_selection(player);
-//    Battle * battle = init_simple_battle(player);
-//    wave_battle(battle);
 }
