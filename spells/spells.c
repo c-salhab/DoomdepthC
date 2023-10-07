@@ -6,17 +6,14 @@
 
 
 char *get_offensive(Character *character) {
-    char *buffer = NULL;
 
-    if (character == NULL || character->offensive_spell == NULL || character->offensive_spell->spell_name == NULL) {
+    if (character->offensive_spell == NULL || character->offensive_spell->spell_name == NULL) {
         return strdup("No offensive spell");
     } else {
         return strdup(character->offensive_spell->spell_name);
     }
 
-    return buffer;
 }
-
 
 void set_offensive(Character *character, char *selection) {
 
@@ -93,6 +90,91 @@ void select_offensive_spell(Character *character) {
     free(offensive_spell);
 }
 
+char *get_defensive(Character *character) {
+
+    if (character->defensive_spell == NULL || character->defensive_spell->spell_name == NULL) {
+        return strdup("No defensive spell");
+    } else {
+        return strdup(character->defensive_spell->spell_name);
+    }
+
+}
+
+void set_defensive(Character *character, char *selection) {
+
+    if (strcmp(selection, "Dragon Skin") == 0) {
+        system("clear");
+        if (character->defensive_spell->spell_name != NULL) {
+            free(character->defensive_spell->spell_name);
+        }
+        character->defensive_spell->spell_name = malloc(strlen("Dragon Skin") + 1);
+        if (character->defensive_spell->spell_name == NULL) {
+            exit(1);
+        }
+        strcpy(character->defensive_spell->spell_name, "Dragon Skin");
+    }
+
+    if (strcmp(selection, "Protected Area") == 0) {
+        system("clear");
+        if (character->defensive_spell->spell_name != NULL) {
+            free(character->defensive_spell->spell_name);
+        }
+        character->defensive_spell->spell_name = malloc(strlen("Protected Area") + 1);
+        if (character->defensive_spell->spell_name == NULL) {
+            exit(1);
+        }
+        strcpy(character->defensive_spell->spell_name, "Protected Area");
+    }
+
+    if (strcmp(selection, "Stick To Me") == 0) {
+        system("clear");
+        if (character->defensive_spell->spell_name != NULL) {
+            free(character->defensive_spell->spell_name);
+        }
+        character->defensive_spell->spell_name = malloc(strlen("Stick To Me") + 1);
+        if (character->defensive_spell->spell_name == NULL) {
+            exit(1);
+        }
+        strcpy(character->defensive_spell->spell_name, "Stick To Me");
+    }
+
+    printf("%s changed the defensive spell to %s\n", character->username, get_defensive(character));
+}
+
+void select_defensive_spell(Character *character) {
+    system("clear");
+
+    char *defensiveSpell[] = {"Dragon Skin", "Protected Area", "Stick To Me"};
+    int quantity = sizeof(defensiveSpell) / sizeof(defensiveSpell[0]);
+
+    char *defensive_spell = get_defensive(character);
+    printf("Your current offensive spell : %s\n", defensive_spell);
+    printf("\n");
+
+    for (int i = 0; i < quantity; i++) {
+        printf("%d. %s\n", i + 1, defensiveSpell[i]);
+    }
+
+    printf("\n");
+
+    int choice;
+
+    printf("Enter Your Choice (or 0 to cancel): ");
+    scanf("%d", &choice);
+
+    system("clear");
+
+    if (choice >= 1 && choice <= quantity) {
+        // printf("%s", defensiveSpell[choice - 1]);
+        set_defensive(character, defensiveSpell[choice - 1]);
+        defensive_spell = get_defensive(character);
+    } else if (choice != 0) {
+        printf("invalid choice: %d\n", choice);
+    }
+
+    free(defensive_spell);
+}
+
 void choose_another_spell(Character *character){
     system("clear");
 
@@ -121,6 +203,7 @@ void choose_another_spell(Character *character){
             break;
         case 2:
             system("clear");
+            select_defensive_spell(character);
             break;
         case 3:
             system("clear");

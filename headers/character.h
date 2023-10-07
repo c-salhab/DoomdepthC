@@ -22,11 +22,10 @@ typedef struct {
     float max_health;
     float max_mana;
     Spell *offensive_spell;
-//    Spell *defensive_spell;
-//    Spell *heal_spell;
+    Spell *defensive_spell;
+    Spell *heal_spell;
 
 } Character;
-
 
 Character * init_character(char *name, float max_health, float max_mana);
 
