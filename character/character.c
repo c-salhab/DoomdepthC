@@ -12,25 +12,38 @@ Projet DoomdepthC
 #include <string.h>
 
 Character *init_character(char *name, float max_health, float max_mana) {
+
     Character *character = malloc(sizeof(Character));
 
-    character->username = name;
-    character->is_alive = 1;
-    character->health = max_health;
-    character->mana = max_mana;
-    character->max_health = max_health;
-    character->max_mana = max_mana;
-    character->level = 1;
-    character->exp = 0;
-    character->exp_needed_to_level_up = 50;
-    character->physical_strength = 0;
-    character->physical_defense = 0;
+    if (character != NULL) {
 
-    character->offensive_spell = malloc(sizeof(Spell));
-    character->offensive_spell->spell_name = NULL;
-    
+        character->username = name;
+        character->is_alive = 1;
+        character->health = max_health;
+        character->mana = max_mana;
+        character->max_health = max_health;
+        character->max_mana = max_mana;
+        character->level = 1;
+        character->exp = 0;
+        character->exp_needed_to_level_up = 50;
+        character->physical_strength = 0;
+        character->physical_defense = 0;
+
+        character->offensive_spell = malloc(sizeof(Spell));
+
+        if (character->offensive_spell != NULL) {
+            character->offensive_spell->spell_name = NULL;
+        } else {
+            free(character);
+            return NULL;
+        }
+    } else {
+        return NULL;
+    }
+
     return character;
 }
+
 
 
 void show_specs(Character *character){

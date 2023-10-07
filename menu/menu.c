@@ -67,6 +67,7 @@ void init_game() {
                 decision = toupper(decision);
 
                 if (decision == 'Y') {
+                    system("clear");
                     printf("\nGoodbye !\n");
                     exit(0);
                 } else if (decision == 'N') {
@@ -100,6 +101,8 @@ void display_menu() {
 
     printf("Hello, %s ! Welcome to Doomdepth !\n", name);
 
+    Character *character = init_character(name, 100, 100);
+
     while (1) {
 
         printf("\x1b[34m");
@@ -125,7 +128,6 @@ void display_menu() {
 
             case 0:
                 system("clear");
-                Character *character = init_character(name, 100, 100);
                 show_specs(character);
                 break;
 
