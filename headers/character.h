@@ -21,6 +21,7 @@ typedef struct {
     int exp_needed_to_level_up;
     float max_health;
     float max_mana;
+    int gold;
     Spell *offensive_spell;
     Spell *defensive_spell;
     Spell *heal_spell;

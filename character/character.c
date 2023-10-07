@@ -26,9 +26,9 @@ Character *init_character(char *name, float max_health, float max_mana) {
     character->exp_needed_to_level_up = 50;
     character->physical_strength = 0;
     character->physical_defense = 0;
+    character->gold = 0;
 
     character->offensive_spell = malloc(sizeof(Spell));
-
     if (character->offensive_spell != NULL) {
         character->offensive_spell->spell_name = NULL;
     } else {
@@ -37,7 +37,6 @@ Character *init_character(char *name, float max_health, float max_mana) {
     }
 
     character->defensive_spell = malloc(sizeof(Spell));
-
     if (character->defensive_spell != NULL) {
         character->defensive_spell->spell_name = NULL;
     } else {
@@ -46,7 +45,6 @@ Character *init_character(char *name, float max_health, float max_mana) {
     }
 
     character->heal_spell = malloc(sizeof(Spell));
-
     if (character->heal_spell != NULL) {
         character->heal_spell->spell_name = NULL;
     } else {
@@ -84,6 +82,7 @@ void show_specs(Character *character){
 
     printf("Username : %s\n", character->username);
     printf("Character's Level : %d\n", character->level);
+    printf("Gold : %d\n", character->gold);
     printf("Xp [%d/%d] : ", character->exp, character->exp_needed_to_level_up);
 
     int current_xp_indication = (character->exp * 30) / character->exp_needed_to_level_up;

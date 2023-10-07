@@ -16,44 +16,44 @@ char *get_offensive(Character *character) {
 }
 
 void set_offensive(Character *character, char *selection) {
+        if (strcmp(selection, "Dragon Breath") == 0) {
+            system("clear");
+            if (character->offensive_spell->spell_name != NULL) {
+                free(character->offensive_spell->spell_name);
+            }
+            character->offensive_spell->spell_name = malloc(strlen("Dragon Breath") + 1);
+            if (character->offensive_spell->spell_name == NULL) {
+                exit(1);
+            }
+            strcpy(character->offensive_spell->spell_name, "Dragon Breath");
+        }
 
-    if (strcmp(selection, "Dragon Breath") == 0) {
-        system("clear");
-        if (character->offensive_spell->spell_name != NULL) {
-            free(character->offensive_spell->spell_name);
+        if (strcmp(selection, "Eat This") == 0) {
+            system("clear");
+            if (character->offensive_spell->spell_name != NULL) {
+                free(character->offensive_spell->spell_name);
+            }
+            character->offensive_spell->spell_name = malloc(strlen("Eat This") + 1);
+            if (character->offensive_spell->spell_name == NULL) {
+                exit(1);
+            }
+            strcpy(character->offensive_spell->spell_name, "Eat This");
         }
-        character->offensive_spell->spell_name = malloc(strlen("Dragon Breath") + 1);
-        if (character->offensive_spell->spell_name == NULL) {
-            exit(1);
-        }
-        strcpy(character->offensive_spell->spell_name, "Dragon Breath");
-    }
 
-    if (strcmp(selection, "Eat This") == 0) {
-        system("clear");
-        if (character->offensive_spell->spell_name != NULL) {
-            free(character->offensive_spell->spell_name);
+        if (strcmp(selection, "Lightning Chain") == 0) {
+            system("clear");
+            if (character->offensive_spell->spell_name != NULL) {
+                free(character->offensive_spell->spell_name);
+            }
+            character->offensive_spell->spell_name = malloc(strlen("Lightning Chain") + 1);
+            if (character->offensive_spell->spell_name == NULL) {
+                exit(1);
+            }
+            strcpy(character->offensive_spell->spell_name, "Lightning Chain");
         }
-        character->offensive_spell->spell_name = malloc(strlen("Eat This") + 1);
-        if (character->offensive_spell->spell_name == NULL) {
-            exit(1);
-        }
-        strcpy(character->offensive_spell->spell_name, "Eat This");
-    }
 
-    if (strcmp(selection, "Lightning Chain") == 0) {
-        system("clear");
-        if (character->offensive_spell->spell_name != NULL) {
-            free(character->offensive_spell->spell_name);
-        }
-        character->offensive_spell->spell_name = malloc(strlen("Lightning Chain") + 1);
-        if (character->offensive_spell->spell_name == NULL) {
-            exit(1);
-        }
-        strcpy(character->offensive_spell->spell_name, "Lightning Chain");
-    }
+        printf("%s changed the offensive spell to %s\n", character->username, get_offensive(character));
 
-    printf("%s changed the offensive spell to %s\n", character->username, get_offensive(character));
 }
 
 void select_offensive_spell(Character *character) {
@@ -65,6 +65,14 @@ void select_offensive_spell(Character *character) {
     char *offensive = get_offensive(character);
     printf("Your current offensive spell : %s\n", offensive);
     printf("\n");
+
+    printf("\x1b[33m");
+    printf("Your current gold balance is: %d gold coins\n", character->gold);
+    printf("\x1b[0m\n");
+
+    printf("\x1b[31m");
+    printf("Each offensive spell costs 20 gold coins\n\n");
+    printf("\x1b[0m");
 
     for (int i = 0; i < quantity; i++) {
         printf("%d. %s\n", i + 1, offensive_spell[i]);
@@ -80,11 +88,22 @@ void select_offensive_spell(Character *character) {
     system("clear");
 
     if (choice >= 1 && choice <= quantity) {
-        // printf("%s", offensiveSpell[choice - 1]);
-        set_offensive(character, offensive_spell[choice - 1]);
-        offensive = get_offensive(character);
+        if(character->gold >= 20){
+            if (character->offensive_spell->spell_name != NULL && strcmp(offensive_spell[choice - 1], character->offensive_spell->spell_name) == 0) {
+                system("clear");
+                printf("%s already has the offensive spell %s\n", character->username, offensive_spell[choice - 1]);
+            } else {
+                character->gold = character->gold - 20;
+                // printf("%s", offensiveSpell[choice - 1]);
+                set_offensive(character, offensive_spell[choice - 1]);
+                offensive = get_offensive(character);
+            }
+        }else{
+            printf("Insufficient gold coins to make the purchase !\n");
+        }
+
     } else if (choice != 0) {
-        printf("invalid choice: %d\n", choice);
+        printf("Invalid choice: %d\n", choice);
     }
 
     free(offensive);
@@ -151,6 +170,14 @@ void select_defensive_spell(Character *character) {
     printf("Your current defensive spell : %s\n", defensive);
     printf("\n");
 
+    printf("\x1b[33m");
+    printf("Your current gold balance is: %d gold coins\n", character->gold);
+    printf("\x1b[0m\n");
+
+    printf("\x1b[31m");
+    printf("Each defensive spell costs 30 gold coins\n\n");
+    printf("\x1b[0m");
+
     for (int i = 0; i < quantity; i++) {
         printf("%d. %s\n", i + 1, defensive_spell[i]);
     }
@@ -165,11 +192,21 @@ void select_defensive_spell(Character *character) {
     system("clear");
 
     if (choice >= 1 && choice <= quantity) {
-        // printf("%s", defensive_spell[choice - 1]);
-        set_defensive(character, defensive_spell[choice - 1]);
-        defensive = get_defensive(character);
+        if(character->gold >= 30) {
+            if (character->defensive_spell->spell_name != NULL && strcmp(defensive_spell[choice - 1], character->defensive_spell->spell_name) == 0) {
+                system("clear");
+                printf("%s already has the defensive spell %s\n", character->username, defensive_spell[choice - 1]);
+            } else {
+                character->gold = character->gold - 30;
+                // printf("%s", defensive_spell[choice - 1]);
+                set_defensive(character, defensive_spell[choice - 1]);
+                defensive = get_defensive(character);
+            }
+        }else{
+            printf("Insufficient gold coins to make the purchase !\n");
+        }
     } else if (choice != 0) {
-        printf("invalid choice: %d\n", choice);
+        printf("Invalid choice: %d\n", choice);
     }
 
     free(defensive);
@@ -236,6 +273,14 @@ void select_heal_spell(Character *character) {
     printf("Your current heal spell : %s\n", heal);
     printf("\n");
 
+    printf("\x1b[33m");
+    printf("Your current gold balance is: %d gold coins\n", character->gold);
+    printf("\x1b[0m\n");
+
+    printf("\x1b[31m");
+    printf("Each heal spell costs 40 gold coins\n\n");
+    printf("\x1b[0m");
+
     for (int i = 0; i < quantity; i++) {
         printf("%d. %s\n", i + 1, heal_spell[i]);
     }
@@ -250,11 +295,21 @@ void select_heal_spell(Character *character) {
     system("clear");
 
     if (choice >= 1 && choice <= quantity) {
-        // printf("%s", heal_spell[choice - 1]);
-        set_heal(character, heal_spell[choice - 1]);
-        heal = get_heal(character);
+        if(character->gold >= 40) {
+            if (character->heal_spell->spell_name != NULL && strcmp(heal_spell[choice - 1], character->heal_spell->spell_name) == 0) {
+                system("clear");
+                printf("%s already has the heal spell %s\n", character->username, heal_spell[choice - 1]);
+            } else {
+                character->gold = character->gold - 40;
+                // printf("%s", heal_spell[choice - 1]);
+                set_heal(character, heal_spell[choice - 1]);
+                heal = get_heal(character);
+            }
+        }else{
+            printf("Insufficient gold coins to make the purchase !\n");
+        }
     } else if (choice != 0) {
-        printf("invalid choice: %d\n", choice);
+        printf("Invalid choice: %d\n", choice);
     }
 
     free(heal);
