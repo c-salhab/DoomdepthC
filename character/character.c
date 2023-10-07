@@ -119,7 +119,14 @@ void show_specs(Character *character){
 
     printf("\n");
 
-    printf("Offensive : \n");
+    printf("Offensive : ");
+
+    if (character == NULL || character->offensive_spell == NULL || character->offensive_spell->spell_name == NULL) {
+        printf("No offensive spell\n");
+    } else {
+        printf("%s\n", character->offensive_spell->spell_name);
+    }
+
     printf("Defensive : \n");
     printf("Heal : \n");
 
