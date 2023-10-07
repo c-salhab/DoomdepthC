@@ -10,14 +10,26 @@ char *get_offensive(Character *character) {
 
     //if (character->offensive_spell != NULL) {
     //    strcpy(buffer, character->offensive_spell->spell_name);
-        strcat(buffer, " (Your current offensive spell)");
+    strcat(buffer, " (Your current offensive spell)");
     //} else {
-        strcpy(buffer, "No offensive spell");
+    strcpy(buffer, "No offensive spell");
     //}
 
     return buffer;
 }
 
+void set_offensive(Character *character, char *selection) {
+    if (strcmp(selection, "Eat This") == 0) {
+        system("clear");
+        // Allouer de la mémoire pour spell_name
+        character->offensive_spell->spell_name = malloc(strlen("Eat This") + 1);
+        // Copier la chaîne littérale dans spell_name
+        strcpy(character->offensive_spell->spell_name, "Eat This");
+        printf("%s changed the offensive spell to %s\n\n", character->username, get_offensive(character));
+    } else {
+        printf("Unknown selection: %s\n", selection);
+    }
+}
 
 void select_offensive_spell(Character *character) {
     system("clear");
@@ -25,7 +37,7 @@ void select_offensive_spell(Character *character) {
     char *offensiveSpell[] = {"Dragon Breath", "Eat This", "Lightning Chain"};
     int quantity = sizeof(offensiveSpell) / sizeof(offensiveSpell[0]);
 
-    printf("Your current offensive spell(s): %s\n", get_offensive(character));
+    printf("Your current offensive spell : %s\n", get_offensive(character));
     printf("\n");
 
     for (int i = 0; i < quantity; i++) {
@@ -38,6 +50,13 @@ void select_offensive_spell(Character *character) {
 
     printf("Enter Your Choice (or 0 to cancel): ");
     scanf("%d", &choice);
+
+    char *selection = malloc(sizeof(char *) * 100);
+    if(choice >= 1 && choice <= quantity){
+       selection = offensiveSpell[choice - 1];
+    }
+
+    set_offensive(character, selection);
 
 }
 

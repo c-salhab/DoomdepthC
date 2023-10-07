@@ -26,24 +26,9 @@ Character *init_character(char *name, float max_health, float max_mana) {
     character->physical_strength = 0;
     character->physical_defense = 0;
 
-//    character->offensive_spell = malloc(sizeof(Spell));
-//    character->offensive_spell->spell_name = NULL;
-//    character->offensive_spell->cost = 0;
-//    character->offensive_spell->physical_damage = 0;
-//    character->offensive_spell->magical_damage = 0;
-//
-//    character->defensive_spell = malloc(sizeof(Spell));
-//    character->defensive_spell->spell_name = NULL;
-//    character->defensive_spell->cost = 0;
-//    character->defensive_spell->physical_damage = 0;
-//    character->defensive_spell->magical_damage = 0;
-//
-//    character->heal_spell = malloc(sizeof(Spell));
-//    character->heal_spell->spell_name = NULL;
-//    character->heal_spell->cost = 0;
-//    character->heal_spell->physical_damage = 0;
-//    character->heal_spell->magical_damage = 0;
-
+    character->offensive_spell = malloc(sizeof(Spell));
+    character->offensive_spell->spell_name = NULL;
+    
     return character;
 }
 
