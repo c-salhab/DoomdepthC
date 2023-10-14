@@ -5,3 +5,4 @@ Projet DoomdepthC
 */
 
 void display_menu();
+void init_game();

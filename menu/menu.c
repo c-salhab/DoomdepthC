@@ -7,8 +7,10 @@ Projet DoomdepthC
 #include "../headers/menu.h"
 #include "../headers/monsters.h"
 #include "../headers/character.h"
+#include "../headers/spells.h"
 #include "../character/character.c"
 #include "../monsters/monsters.c"
+#include "../spells/spells.c"
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -65,6 +67,7 @@ void init_game() {
                 decision = toupper(decision);
 
                 if (decision == 'Y') {
+                    system("clear");
                     printf("\nGoodbye !\n");
                     exit(0);
                 } else if (decision == 'N') {
@@ -98,6 +101,8 @@ void display_menu() {
 
     printf("Hello, %s ! Welcome to Doomdepth !\n", name);
 
+    Character *character = init_character(name, 100, 100);
+
     while (1) {
 
         printf("\x1b[34m");
@@ -107,7 +112,7 @@ void display_menu() {
         printf("0. Show Stats\n");
         printf("1. Fight\n");
         printf("2. Choose spells\n");
-        printf("3. Check Characters\n");
+        printf("3. Check Map\n");
         printf("4. Exit the game\n");
         printf("\n");
 
@@ -123,7 +128,6 @@ void display_menu() {
 
             case 0:
                 system("clear");
-                Character *character = init_character(name, 100, 100);
                 show_specs(character);
                 break;
 
@@ -132,7 +136,8 @@ void display_menu() {
                 Monster **monsters = generate_monster();
 
                 if(monsters){
-                   fight(character, monsters);
+                  // fight(character, monsters);
+                  printf("test");
                 }
 
                 break;
@@ -140,11 +145,12 @@ void display_menu() {
             case 2:
                 system("clear");
                 // choose spells
+                choose_another_spell(character);
                 break;
 
             case 3:
                 system("clear");
-                // check characters
+                // check map
                 break;
 
             case 4:

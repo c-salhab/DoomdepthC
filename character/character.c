@@ -5,13 +5,16 @@ Projet DoomdepthC
 */
 
 #include "../headers/character.h"
+#include "../headers/spells.h"
 #include "../headers/monsters.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-Character * init_character(char *name, float max_health, float max_mana){
+Character *init_character(char *name, float max_health, float max_mana) {
+
     Character *character = malloc(sizeof(Character));
+
     character->username = name;
     character->is_alive = 1;
     character->health = max_health;
@@ -23,10 +26,34 @@ Character * init_character(char *name, float max_health, float max_mana){
     character->exp_needed_to_level_up = 50;
     character->physical_strength = 0;
     character->physical_defense = 0;
+    character->gold = 0;
+
+    character->offensive_spell = malloc(sizeof(Spell));
+    if (character->offensive_spell != NULL) {
+        character->offensive_spell->spell_name = NULL;
+    } else {
+        free(character);
+        return NULL;
+    }
+
+    character->defensive_spell = malloc(sizeof(Spell));
+    if (character->defensive_spell != NULL) {
+        character->defensive_spell->spell_name = NULL;
+    } else {
+        free(character);
+        return NULL;
+    }
+
+    character->heal_spell = malloc(sizeof(Spell));
+    if (character->heal_spell != NULL) {
+        character->heal_spell->spell_name = NULL;
+    } else {
+        free(character);
+        return NULL;
+    }
 
     return character;
 }
-
 
 void show_specs(Character *character){
 
@@ -55,6 +82,7 @@ void show_specs(Character *character){
 
     printf("Username : %s\n", character->username);
     printf("Character's Level : %d\n", character->level);
+    printf("Gold : %d\n", character->gold);
     printf("Xp [%d/%d] : ", character->exp, character->exp_needed_to_level_up);
 
     int current_xp_indication = (character->exp * 30) / character->exp_needed_to_level_up;
@@ -101,9 +129,26 @@ void show_specs(Character *character){
 
     printf("\n");
 
-    printf("Offensive : \n");
-    printf("Defensive : \n");
-    printf("Heal : \n");
+    printf("Offensive : ");
+
+    if (character->offensive_spell == NULL || character->offensive_spell->spell_name == NULL) {
+        printf("No offensive spell\n");
+    } else {
+        printf("%s\n", character->offensive_spell->spell_name);
+    }
+
+    printf("Defensive : ");
+    if (character->defensive_spell == NULL || character->defensive_spell->spell_name == NULL) {
+        printf("No defensive spell\n");
+    } else {
+        printf("%s\n", character->defensive_spell->spell_name);
+    }
+    printf("Heal : ");
+    if (character->heal_spell == NULL || character->heal_spell->spell_name == NULL) {
+        printf("No heal spell\n");
+    } else {
+        printf("%s\n", character->heal_spell->spell_name);
+    }
 
     str = "Gears : ";
     size = strlen(str);
@@ -146,13 +191,21 @@ void fight(Character *character, Monster **list_monster){
 
     printf("\n --- {%s} VS {The Monsters} ---\n", character->username);
 
-    int boolean = has_gear(character);
+    //int boolean = has_gear(character);
+
 
    /*if(boolean == 1){
         show_gear();
     }else{
         takes_gear();
     }*/
+
+//    if(boolean == 1){
+//        //show_gear();
+//    }else{
+//        //takes_gear();
+//    }
+
 
     int round = 1;
 
