@@ -148,11 +148,11 @@ void fight(Character *character, Monster **list_monster){
 
     int boolean = has_gear(character);
 
-    if(boolean == 1){
+   /*if(boolean == 1){
         show_gear();
     }else{
         takes_gear();
-    }
+    }*/
 
     int round = 1;
 
