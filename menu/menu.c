@@ -136,8 +136,7 @@ void display_menu() {
                 Monster **monsters = generate_monster();
 
                 if(monsters){
-                  // fight(character, monsters);
-                  printf("test");
+                    fight(character, monsters);
                 }
 
                 break;

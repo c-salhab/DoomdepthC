@@ -8,6 +8,7 @@ Projet DoomdepthC
 #define CHARACTER_H
 
 #include "spells.h"
+#include "gear.h"
 
 typedef struct {
     char *username;
@@ -25,6 +26,7 @@ typedef struct {
     Spell *offensive_spell;
     Spell *defensive_spell;
     Spell *heal_spell;
+    Gear *gear;
 
 } Character;
 

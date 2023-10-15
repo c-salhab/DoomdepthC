@@ -24,7 +24,7 @@ void init_monster(int life, int min_power, int max_power, int defense) {
 
 Monster ** generate_monster() {
     srand(time(NULL));
-    int n = (rand() % 30) + 1;
+    int n = (rand() % 10) + 1;
 
     Monster **list_monster = malloc(sizeof(Monster*) * (n + 1));
 
