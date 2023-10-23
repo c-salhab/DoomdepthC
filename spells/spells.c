@@ -1,8 +1,13 @@
+/*
+Created by : Charbel Salhab, Olivier Nart, Bao Nguyen Tran Duc
+Date : 27/09/2023
+Projet DoomdepthC
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "../headers/character.h"
-#include "../headers/spells.h"
 
 Spell *create_spell(char *spell_name, int cost, int physical_damage, int magical_damage) {
 

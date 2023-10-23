@@ -4,14 +4,13 @@ Date : 27/09/2023
 Projet DoomdepthC
 */
 
-#include "../headers/character.h"
-#include "../headers/spells.h"
-#include "../headers/monsters.h"
-#include "../weapon/weapon.c"
-#include "../armor/armor.c"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "../headers/character.h"
+#include "../headers/monsters.h"
+#include "../weapon/weapon.c"
+#include "../armor/armor.c"
 
 Character *init_character(char *name, float max_health, float max_mana) {
 

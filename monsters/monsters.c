@@ -5,11 +5,8 @@ Projet DoomdepthC
 */
 
 #include "../headers/monsters.h"
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <time.h>
-
 
 void init_monster(int life, int min_power, int max_power, int defense) {
 

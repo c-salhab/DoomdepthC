@@ -7,14 +7,12 @@ Projet DoomdepthC
 #include "../headers/menu.h"
 #include "../headers/monsters.h"
 #include "../headers/character.h"
-#include "../headers/spells.h"
 #include "../character/character.c"
 #include "../monsters/monsters.c"
 #include "../spells/spells.c"
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include <string.h>
 
 void init_game() {
 
@@ -101,7 +99,7 @@ void display_menu() {
 
     printf("Hello, %s ! Welcome to Doomdepth !\n", name);
 
-    Character *character = init_character(name, 100, 100);
+    Character *character = init_character(name, 1000, 1000);
 
     while (1) {
 

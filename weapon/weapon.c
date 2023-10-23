@@ -4,10 +4,8 @@ Date : 27/09/2023
 Projet DoomdepthC
 */
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include "../headers/weapon.h"
 
 Weapon *create_weapon(char *type, char *weapon_name, char *description, float physical_damage, float magical_damage, float durability) {

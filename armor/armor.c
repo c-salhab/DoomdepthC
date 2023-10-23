@@ -4,10 +4,8 @@ Date : 27/09/2023
 Projet DoomdepthC
 */
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include "../headers/armor.h"
 
 Armor *create_armor(char *armor_name, char *description, float physical_defense, float magical_defense, int durability) {
