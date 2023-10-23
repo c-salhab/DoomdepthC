@@ -4,8 +4,8 @@ Date : 27/09/2023
 Projet DoomdepthC
 */
 
-#ifndef DOOMDEPTHC_GEAR_H
-#define DOOMDEPTHC_GEAR_H
+#ifndef DOOMDEPTHC_INVENTORY_H
+#define DOOMDEPTHC_INVENTORY_H
 
 #include "weapon.h"
 #include "armor.h"
@@ -13,6 +13,6 @@ Projet DoomdepthC
 typedef struct {
      Weapon *equipped_weapon;
      Armor *equipped_armor;
-} Gear;
+} Inventory;
 
-#endif //DOOMDEPTHC_GEAR_H
+#endif //DOOMDEPTHC_INVENTORY_H

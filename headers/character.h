@@ -8,27 +8,27 @@ Projet DoomdepthC
 #define CHARACTER_H
 
 #include "spells.h"
-#include "gear.h"
+#include "inventory.h"
 
 typedef struct {
+
     char *username;
     int is_alive;
-    float health;
-    float mana;
-    float physical_strength;
-    float physical_defense;
+    float current_health;
+    float current_mana;
+
     int level;
     int exp;
-    int exp_needed_to_level_up;
-    float max_health;
-    float max_mana;
+
     int gold;
     Spell *offensive_spell;
     Spell *defensive_spell;
     Spell *heal_spell;
-    Gear *gear;
+    Inventory *inventory;
 
 } Character;
+
+int exp_needed_to_level_up = 50;
 
 Character * init_character(char *name, float max_health, float max_mana);
 
