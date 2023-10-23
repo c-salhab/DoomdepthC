@@ -25,7 +25,7 @@ Character *init_character(char *name, float max_health, float max_mana) {
     character->level = 1;
     character->exp = 0;
 
-    character->gold = 0;
+    character->gold = 40;
     character->offensive_spell = NULL;
     character->defensive_spell = NULL;
     character->heal_spell = NULL;

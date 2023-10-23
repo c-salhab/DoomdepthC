@@ -4,63 +4,53 @@
 #include "../headers/character.h"
 #include "../headers/spells.h"
 
+Spell *create_spell(char *spell_name, int cost, int physical_damage, int magical_damage) {
+
+    Spell *new_spell = malloc(sizeof(Spell));
+    new_spell->spell_name = strdup(spell_name);
+    new_spell->cost = cost;
+    new_spell->physical_damage = physical_damage;
+    new_spell->magical_damage = magical_damage;
+
+    return new_spell;
+}
 
 char *get_offensive(Character *character) {
 
-    if (character->offensive_spell == NULL || character->offensive_spell->spell_name == NULL) {
-        return strdup("No offensive spell");
+    if (character->offensive_spell == NULL) {
+        return "No offensive spell";
     } else {
-        return strdup(character->offensive_spell->spell_name);
+        return character->offensive_spell->spell_name;
     }
 
 }
 
-void set_offensive(Character *character, char *selection) {
-        if (strcmp(selection, "Dragon Breath") == 0) {
-            system("clear");
-            if (character->offensive_spell->spell_name != NULL) {
-                free(character->offensive_spell->spell_name);
-            }
-            character->offensive_spell->spell_name = malloc(strlen("Dragon Breath") + 1);
-            if (character->offensive_spell->spell_name == NULL) {
-                exit(1);
-            }
-            strcpy(character->offensive_spell->spell_name, "Dragon Breath");
-        }
+void set_offensive(Character *character, Spell *selection) {
+    if (character->offensive_spell != NULL) {
+        free(character->offensive_spell->spell_name);
+        free(character->offensive_spell);
+    }
 
-        if (strcmp(selection, "Eat This") == 0) {
-            system("clear");
-            if (character->offensive_spell->spell_name != NULL) {
-                free(character->offensive_spell->spell_name);
-            }
-            character->offensive_spell->spell_name = malloc(strlen("Eat This") + 1);
-            if (character->offensive_spell->spell_name == NULL) {
-                exit(1);
-            }
-            strcpy(character->offensive_spell->spell_name, "Eat This");
-        }
+    character->offensive_spell = (Spell*)malloc(sizeof(Spell));
+    character->offensive_spell->spell_name = strdup(selection->spell_name);
+    character->offensive_spell->cost = selection->cost;
+    character->offensive_spell->physical_damage = selection->physical_damage;
+    character->offensive_spell->magical_damage = selection->magical_damage;
 
-        if (strcmp(selection, "Lightning Chain") == 0) {
-            system("clear");
-            if (character->offensive_spell->spell_name != NULL) {
-                free(character->offensive_spell->spell_name);
-            }
-            character->offensive_spell->spell_name = malloc(strlen("Lightning Chain") + 1);
-            if (character->offensive_spell->spell_name == NULL) {
-                exit(1);
-            }
-            strcpy(character->offensive_spell->spell_name, "Lightning Chain");
-        }
-
-        printf("%s changed the offensive spell to %s\n", character->username, get_offensive(character));
-
+    printf("%s changed the offensive spell to %s\n", character->username, character->offensive_spell->spell_name);
 }
 
 void select_offensive_spell(Character *character) {
     system("clear");
 
-    char *offensive_spell[] = {"Dragon Breath", "Eat This", "Lightning Chain"};
-    int quantity = sizeof(offensive_spell) / sizeof(offensive_spell[0]);
+    Spell *dragon_breath = create_spell("Dragon Breath", 100, 0, 500);
+    Spell *eat_this = create_spell("Eat This", 65, 0 , 300);
+    Spell *lightning_chain = create_spell("Lightning Chain", 65, 0, 300);
+
+    Spell *can_use[3];
+    can_use[0] = dragon_breath;
+    can_use[1] = eat_this;
+    can_use[2] = lightning_chain;
 
     char *offensive = get_offensive(character);
     printf("Your current offensive spell : %s\n", offensive);
@@ -74,8 +64,8 @@ void select_offensive_spell(Character *character) {
     printf("Each offensive spell costs 20 gold coins\n\n");
     printf("\x1b[0m");
 
-    for (int i = 0; i < quantity; i++) {
-        printf("%d. %s\n", i + 1, offensive_spell[i]);
+    for (int i = 0; i < 3; i++) {
+        printf("%d. %s\n", i + 1, can_use[i]->spell_name);
     }
 
     printf("\n");
@@ -87,75 +77,67 @@ void select_offensive_spell(Character *character) {
 
     system("clear");
 
-    if (choice >= 1 && choice <= quantity) {
+    if (choice >= 1 && choice <= 3) {
+
         if(character->gold >= 20){
-            if (character->offensive_spell->spell_name != NULL && strcmp(offensive_spell[choice - 1], character->offensive_spell->spell_name) == 0) {
-                system("clear");
-                printf("%s already has the offensive spell %s\n", character->username, offensive_spell[choice - 1]);
-            } else {
+
+            if (character->offensive_spell == NULL || character->offensive_spell->spell_name == NULL) {
+                // printf("test ok");
                 character->gold = character->gold - 20;
-                // printf("%s", offensiveSpell[choice - 1]);
-                set_offensive(character, offensive_spell[choice - 1]);
-                offensive = get_offensive(character);
+                // printf("%s", can_use[choice - 1]->spell_name);
+                set_offensive(character, can_use[choice - 1]);
+            } else {
+                if (strcmp(can_use[choice - 1]->spell_name, character->offensive_spell->spell_name) == 0) {
+                    // printf("test ok");
+                    system("clear");
+                    printf("%s already has the offensive spell %s\n", character->username,can_use[choice - 1]->spell_name);
+                } else {
+                    // printf("test ok");
+                    character->gold = character->gold - 20;
+                    //printf("%s", can_use[choice - 1]->spell_name);
+                    set_offensive(character, can_use[choice - 1]);
+                }
             }
+
+
         }else{
             printf("Insufficient gold coins to make the purchase !\n");
         }
 
     } else if (choice != 0) {
-        printf("Invalid choice: %d\n", choice);
+        printf("Invalid choice : %d\n", choice);
     }
 
-    free(offensive);
+    free(dragon_breath->spell_name);
+    free(dragon_breath);
+    free(eat_this->spell_name);
+    free(eat_this);
+    free(lightning_chain->spell_name);
+    free(lightning_chain);
 }
 
 char *get_defensive(Character *character) {
 
     if (character->defensive_spell == NULL || character->defensive_spell->spell_name == NULL) {
-        return strdup("No defensive spell");
+        return "No defensive spell";
     } else {
-        return strdup(character->defensive_spell->spell_name);
+        return character->defensive_spell->spell_name;
     }
 
 }
 
-void set_defensive(Character *character, char *selection) {
+void set_defensive(Character *character, Spell *selection) {
 
-    if (strcmp(selection, "Dragon Skin") == 0) {
-        system("clear");
-        if (character->defensive_spell->spell_name != NULL) {
-            free(character->defensive_spell->spell_name);
-        }
-        character->defensive_spell->spell_name = malloc(strlen("Dragon Skin") + 1);
-        if (character->defensive_spell->spell_name == NULL) {
-            exit(1);
-        }
-        strcpy(character->defensive_spell->spell_name, "Dragon Skin");
+    if (character->defensive_spell != NULL) {
+        free(character->defensive_spell->spell_name);
+        free(character->defensive_spell);
     }
 
-    if (strcmp(selection, "Protected Area") == 0) {
-        system("clear");
-        if (character->defensive_spell->spell_name != NULL) {
-            free(character->defensive_spell->spell_name);
-        }
-        character->defensive_spell->spell_name = malloc(strlen("Protected Area") + 1);
-        if (character->defensive_spell->spell_name == NULL) {
-            exit(1);
-        }
-        strcpy(character->defensive_spell->spell_name, "Protected Area");
-    }
-
-    if (strcmp(selection, "Stick To Me") == 0) {
-        system("clear");
-        if (character->defensive_spell->spell_name != NULL) {
-            free(character->defensive_spell->spell_name);
-        }
-        character->defensive_spell->spell_name = malloc(strlen("Stick To Me") + 1);
-        if (character->defensive_spell->spell_name == NULL) {
-            exit(1);
-        }
-        strcpy(character->defensive_spell->spell_name, "Stick To Me");
-    }
+    character->defensive_spell = (Spell*)malloc(sizeof(Spell));
+    character->defensive_spell->spell_name = strdup(selection->spell_name);
+    character->defensive_spell->cost = selection->cost;
+    character->defensive_spell->physical_damage = selection->physical_damage;
+    character->defensive_spell->magical_damage = selection->magical_damage;
 
     printf("%s changed the defensive spell to %s\n", character->username, get_defensive(character));
 }
@@ -163,8 +145,14 @@ void set_defensive(Character *character, char *selection) {
 void select_defensive_spell(Character *character) {
     system("clear");
 
-    char *defensive_spell[] = {"Dragon Skin", "Protected Area", "Stick To Me"};
-    int quantity = sizeof(defensive_spell) / sizeof(defensive_spell[0]);
+    Spell *dragon_skin = create_spell("Dragon Skin", 40, 40, 200);
+    Spell *protected_area = create_spell("Protected Area", 40, 150 , 100);
+    Spell *stick_to_me = create_spell("Stick To Me", 100, 120, 300);
+
+    Spell *can_use[3];
+    can_use[0] = dragon_skin;
+    can_use[1] = protected_area;
+    can_use[2] = stick_to_me;
 
     char *defensive = get_defensive(character);
     printf("Your current defensive spell : %s\n", defensive);
@@ -178,8 +166,8 @@ void select_defensive_spell(Character *character) {
     printf("Each defensive spell costs 30 gold coins\n\n");
     printf("\x1b[0m");
 
-    for (int i = 0; i < quantity; i++) {
-        printf("%d. %s\n", i + 1, defensive_spell[i]);
+    for (int i = 0; i < 3; i++) {
+        printf("%d. %s\n", i + 1, can_use[i]->spell_name);
     }
 
     printf("\n");
@@ -191,17 +179,27 @@ void select_defensive_spell(Character *character) {
 
     system("clear");
 
-    if (choice >= 1 && choice <= quantity) {
+    if (choice >= 1 && choice <= 3) {
         if(character->gold >= 30) {
-            if (character->defensive_spell->spell_name != NULL && strcmp(defensive_spell[choice - 1], character->defensive_spell->spell_name) == 0) {
-                system("clear");
-                printf("%s already has the defensive spell %s\n", character->username, defensive_spell[choice - 1]);
-            } else {
+
+            if (character->defensive_spell == NULL || character->defensive_spell->spell_name == NULL) {
+                // printf("test ok");
                 character->gold = character->gold - 30;
-                // printf("%s", defensive_spell[choice - 1]);
-                set_defensive(character, defensive_spell[choice - 1]);
-                defensive = get_defensive(character);
+                // printf("%s", can_use[choice - 1]->spell_name);
+                set_defensive(character, can_use[choice - 1]);
+            } else {
+                if (strcmp(can_use[choice - 1]->spell_name, character->defensive_spell->spell_name) == 0) {
+                    // printf("test ok");
+                    system("clear");
+                    printf("%s already has the defensive spell %s\n", character->username,can_use[choice - 1]->spell_name);
+                } else {
+                    // printf("test ok");
+                    character->gold = character->gold - 20;
+                    //printf("%s", can_use[choice - 1]->spell_name);
+                    set_defensive(character, can_use[choice - 1]);
+                }
             }
+
         }else{
             printf("Insufficient gold coins to make the purchase !\n");
         }
@@ -209,56 +207,36 @@ void select_defensive_spell(Character *character) {
         printf("Invalid choice: %d\n", choice);
     }
 
-    free(defensive);
+    free(dragon_skin->spell_name);
+    free(dragon_skin);
+    free(protected_area->spell_name);
+    free(protected_area);
+    free(stick_to_me->spell_name);
+    free(stick_to_me);
 }
 
 char *get_heal(Character *character) {
 
     if (character->heal_spell == NULL || character->heal_spell->spell_name == NULL) {
-        return strdup("No heal spell");
+        return "No heal spell";
     } else {
-        return strdup(character->heal_spell->spell_name);
+        return character->heal_spell->spell_name;
     }
 
 }
 
-void set_heal(Character *character, char *selection) {
+void set_heal(Character *character, Spell *selection) {
 
-    if (strcmp(selection, "Healing Aura") == 0) {
-        system("clear");
-        if (character->heal_spell->spell_name != NULL) {
-            free(character->heal_spell->spell_name);
-        }
-        character->heal_spell->spell_name = malloc(strlen("Healing Aura") + 1);
-        if (character->heal_spell->spell_name == NULL) {
-            exit(1);
-        }
-        strcpy(character->heal_spell->spell_name, "Healing Aura");
+    if (character->heal_spell != NULL) {
+        free(character->heal_spell->spell_name);
+        free(character->heal_spell);
     }
 
-    if (strcmp(selection, "Healing Light House") == 0) {
-        system("clear");
-        if (character->heal_spell->spell_name != NULL) {
-            free(character->heal_spell->spell_name);
-        }
-        character->heal_spell->spell_name = malloc(strlen("Healing Light House") + 1);
-        if (character->heal_spell->spell_name == NULL) {
-            exit(1);
-        }
-        strcpy(character->heal_spell->spell_name, "Healing Light House");
-    }
-
-    if (strcmp(selection, "Heart Of Dragon") == 0) {
-        system("clear");
-        if (character->heal_spell->spell_name != NULL) {
-            free(character->heal_spell->spell_name);
-        }
-        character->heal_spell->spell_name = malloc(strlen("Heart Of Dragon") + 1);
-        if (character->heal_spell->spell_name == NULL) {
-            exit(1);
-        }
-        strcpy(character->heal_spell->spell_name, "Heart Of Dragon");
-    }
+    character->heal_spell = (Spell*)malloc(sizeof(Spell));
+    character->heal_spell->spell_name = strdup(selection->spell_name);
+    character->heal_spell->cost = selection->cost;
+    character->heal_spell->physical_damage = selection->physical_damage;
+    character->heal_spell->magical_damage = selection->magical_damage;
 
     printf("%s changed the heal spell to %s\n", character->username, get_heal(character));
 }
@@ -266,8 +244,14 @@ void set_heal(Character *character, char *selection) {
 void select_heal_spell(Character *character) {
     system("clear");
 
-    char *heal_spell[] = {"Healing Aura", "Healing Light House", "Heart Of Dragon"};
-    int quantity = sizeof(heal_spell) / sizeof(heal_spell[0]);
+    Spell *healing_aura = create_spell("Healing Aura", 83, 0, 150);
+    Spell *healing_light_house = create_spell("Healing Light House", 130, 0, 300);
+    Spell *heart_of_dragon = create_spell("Heart Of Dragon", 210, 0, 500);
+
+    Spell *can_use[3];
+    can_use[0] = healing_aura;
+    can_use[1] = healing_light_house;
+    can_use[2] = heart_of_dragon;
 
     char *heal = get_heal(character);
     printf("Your current heal spell : %s\n", heal);
@@ -281,8 +265,8 @@ void select_heal_spell(Character *character) {
     printf("Each heal spell costs 40 gold coins\n\n");
     printf("\x1b[0m");
 
-    for (int i = 0; i < quantity; i++) {
-        printf("%d. %s\n", i + 1, heal_spell[i]);
+    for (int i = 0; i < 3; i++) {
+        printf("%d. %s\n", i + 1, can_use[i]->spell_name);
     }
 
     printf("\n");
@@ -294,16 +278,24 @@ void select_heal_spell(Character *character) {
 
     system("clear");
 
-    if (choice >= 1 && choice <= quantity) {
+    if (choice >= 1 && choice <= 3) {
         if(character->gold >= 40) {
-            if (character->heal_spell->spell_name != NULL && strcmp(heal_spell[choice - 1], character->heal_spell->spell_name) == 0) {
-                system("clear");
-                printf("%s already has the heal spell %s\n", character->username, heal_spell[choice - 1]);
+            if (character->heal_spell == NULL || character->heal_spell->spell_name == NULL) {
+                // printf("test ok");
+                character->gold = character->gold - 30;
+                // printf("%s", can_use[choice - 1]->spell_name);
+                set_heal(character, can_use[choice - 1]);
             } else {
-                character->gold = character->gold - 40;
-                // printf("%s", heal_spell[choice - 1]);
-                set_heal(character, heal_spell[choice - 1]);
-                heal = get_heal(character);
+                if (strcmp(can_use[choice - 1]->spell_name, character->heal_spell->spell_name) == 0) {
+                    // printf("test ok");
+                    system("clear");
+                    printf("%s already has the heal spell %s\n", character->username,can_use[choice - 1]->spell_name);
+                } else {
+                    // printf("test ok");
+                    character->gold = character->gold - 20;
+                    //printf("%s", can_use[choice - 1]->spell_name);
+                    set_heal(character, can_use[choice - 1]);
+                }
             }
         }else{
             printf("Insufficient gold coins to make the purchase !\n");
@@ -312,7 +304,12 @@ void select_heal_spell(Character *character) {
         printf("Invalid choice: %d\n", choice);
     }
 
-    free(heal);
+    free(healing_aura->spell_name);
+    free(healing_aura);
+    free(healing_light_house->spell_name);
+    free(healing_light_house);
+    free(heart_of_dragon->spell_name);
+    free(heart_of_dragon);
 }
 
 void choose_another_spell(Character *character){
@@ -354,3 +351,4 @@ void choose_another_spell(Character *character){
             printf("\nChoose between 0 and 4 !\n");
     }
 }
+
