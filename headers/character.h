@@ -9,6 +9,7 @@ Projet DoomdepthC
 
 #include "spells.h"
 #include "inventory.h"
+#include "monsters.h"
 
 typedef struct {
 
@@ -29,11 +30,13 @@ typedef struct {
 } Character;
 
 int exp_needed_to_level_up = 50;
+int max_health = 0;
+int max_mana = 0;
 
-Character * init_character(char *name, float max_health, float max_mana);
+Character * init_character(char *name);
 
 void show_specs(Character *character);
 
-void fight(Character *character, Monster **list_monster);
+void fight(Character *character, Monster **list_monster, int num_monsters);
 
 #endif

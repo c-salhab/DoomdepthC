@@ -14,6 +14,15 @@ Projet DoomdepthC
 #include <stdlib.h>
 #include <ctype.h>
 
+
+int get_list_size(Monster **list_monsters) {
+    int size = 0;
+    while (list_monsters[size] != NULL) {
+        size++;
+    }
+    return size;
+}
+
 void init_game() {
 
 
@@ -99,7 +108,7 @@ void display_menu() {
 
     printf("Hello, %s ! Welcome to Doomdepth !\n", name);
 
-    Character *character = init_character(name, 1000, 1000);
+    Character *character = init_character(name);
 
     while (1) {
 
@@ -132,9 +141,11 @@ void display_menu() {
             case 1:
                 system("clear");
                 Monster **monsters = generate_monster();
+                int size = get_list_size(monsters);
 
                 if(monsters){
-                    fight(character, monsters);
+                    // printf("%d", size);
+                    fight(character, monsters, size);
                 }
 
                 break;
