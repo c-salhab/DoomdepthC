@@ -12,8 +12,9 @@ Projet DoomdepthC
 typedef struct {
     char *spell_name;
     int cost;
-    int physical_damage;
-    int magical_damage;
+    int offensive;
+    int defensive;
+    int heal;
 } Spell;
 
 //void choose_another_spell(Character *character);

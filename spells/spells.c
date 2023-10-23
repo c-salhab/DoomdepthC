@@ -9,13 +9,14 @@ Projet DoomdepthC
 #include <string.h>
 #include "../headers/character.h"
 
-Spell *create_spell(char *spell_name, int cost, int physical_damage, int magical_damage) {
+Spell *create_spell(char *spell_name, int cost, int offensive, int defensive, int heal) {
 
     Spell *new_spell = malloc(sizeof(Spell));
     new_spell->spell_name = strdup(spell_name);
     new_spell->cost = cost;
-    new_spell->physical_damage = physical_damage;
-    new_spell->magical_damage = magical_damage;
+    new_spell->offensive = offensive;
+    new_spell->defensive = defensive;
+    new_spell->heal = heal;
 
     return new_spell;
 }
@@ -39,8 +40,9 @@ void set_offensive(Character *character, Spell *selection) {
     character->offensive_spell = (Spell*)malloc(sizeof(Spell));
     character->offensive_spell->spell_name = strdup(selection->spell_name);
     character->offensive_spell->cost = selection->cost;
-    character->offensive_spell->physical_damage = selection->physical_damage;
-    character->offensive_spell->magical_damage = selection->magical_damage;
+    character->offensive_spell->offensive = selection->offensive;
+    character->offensive_spell->defensive = selection->defensive;
+    character->offensive_spell->heal = selection->heal;
 
     printf("%s changed the offensive spell to %s\n", character->username, character->offensive_spell->spell_name);
 }
@@ -48,9 +50,9 @@ void set_offensive(Character *character, Spell *selection) {
 void select_offensive_spell(Character *character) {
     system("clear");
 
-    Spell *dragon_breath = create_spell("Dragon Breath", 100, 0, 500);
-    Spell *eat_this = create_spell("Eat This", 65, 0 , 300);
-    Spell *lightning_chain = create_spell("Lightning Chain", 65, 0, 300);
+    Spell *dragon_breath = create_spell("Dragon Breath", 100, 500, 0,0);
+    Spell *eat_this = create_spell("Eat This", 65, 300, 0, 0);
+    Spell *lightning_chain = create_spell("Lightning Chain", 65, 300, 0,0);
 
     Spell *can_use[3];
     can_use[0] = dragon_breath;
@@ -141,8 +143,9 @@ void set_defensive(Character *character, Spell *selection) {
     character->defensive_spell = (Spell*)malloc(sizeof(Spell));
     character->defensive_spell->spell_name = strdup(selection->spell_name);
     character->defensive_spell->cost = selection->cost;
-    character->defensive_spell->physical_damage = selection->physical_damage;
-    character->defensive_spell->magical_damage = selection->magical_damage;
+    character->defensive_spell->offensive = selection->offensive;
+    character->defensive_spell->defensive = selection->defensive;
+    character->defensive_spell->heal = selection->heal;
 
     printf("%s changed the defensive spell to %s\n", character->username, get_defensive(character));
 }
@@ -150,9 +153,9 @@ void set_defensive(Character *character, Spell *selection) {
 void select_defensive_spell(Character *character) {
     system("clear");
 
-    Spell *dragon_skin = create_spell("Dragon Skin", 40, 40, 200);
-    Spell *protected_area = create_spell("Protected Area", 40, 150 , 100);
-    Spell *stick_to_me = create_spell("Stick To Me", 100, 120, 300);
+    Spell *dragon_skin = create_spell("Dragon Skin", 40, 0, 40, 0);
+    Spell *protected_area = create_spell("Protected Area", 40, 0,40, 0);
+    Spell *stick_to_me = create_spell("Stick To Me", 100, 0,120, 0);
 
     Spell *can_use[3];
     can_use[0] = dragon_skin;
@@ -240,8 +243,9 @@ void set_heal(Character *character, Spell *selection) {
     character->heal_spell = (Spell*)malloc(sizeof(Spell));
     character->heal_spell->spell_name = strdup(selection->spell_name);
     character->heal_spell->cost = selection->cost;
-    character->heal_spell->physical_damage = selection->physical_damage;
-    character->heal_spell->magical_damage = selection->magical_damage;
+    character->heal_spell->offensive = selection->offensive;
+    character->heal_spell->defensive = selection->defensive;
+    character->heal_spell->heal = selection->heal;
 
     printf("%s changed the heal spell to %s\n", character->username, get_heal(character));
 }
@@ -249,9 +253,9 @@ void set_heal(Character *character, Spell *selection) {
 void select_heal_spell(Character *character) {
     system("clear");
 
-    Spell *healing_aura = create_spell("Healing Aura", 83, 0, 150);
-    Spell *healing_light_house = create_spell("Healing Light House", 130, 0, 300);
-    Spell *heart_of_dragon = create_spell("Heart Of Dragon", 210, 0, 500);
+    Spell *healing_aura = create_spell("Healing Aura", 83, 0, 0, 150);
+    Spell *healing_light_house = create_spell("Healing Light House", 130, 0, 0, 300);
+    Spell *heart_of_dragon = create_spell("Heart Of Dragon", 210, 0, 0, 500);
 
     Spell *can_use[3];
     can_use[0] = healing_aura;
