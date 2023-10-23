@@ -260,24 +260,28 @@ void takes_inventory(Character *character) {
 
 void character_attack(Character *character, Monster *monster) {
 
+    // TODO: modifier le code pour enlever les if != NULL et mettre a jour le code pour faire un propre combat
     if (character->offensive_spell != NULL) {
         printf("%s uses the offensive spell : %s\n", character->username, character->offensive_spell->spell_name);
         int damage = character->offensive_spell->offensive;
         monster->life -= damage;
-    }else{
+    } else if (!is_printed) {
         printf("%s doesn't have any offensive spell to use !\n", character->username);
+        is_printed = 1;
     }
 
     if (character->heal_spell != NULL) {
         printf("%s uses the heal spell : %s\n", character->username, character->heal_spell->spell_name);
-    }else{
+    } else if (!is_printed) {
         printf("%s doesn't have any heal spell to use !\n", character->username);
+        is_printed = 1;
     }
 
     if (character->defensive_spell != NULL) {
         printf("%s uses the defensive spell : %s\n", character->username, character->defensive_spell->spell_name);
-    }else{
+    } else if (!is_printed) {
         printf("%s doesn't have any defensive spell to use !\n", character->username);
+        is_printed = 1;
     }
 
     printf("%s attaque le monstre\n", character->username);
@@ -285,7 +289,6 @@ void character_attack(Character *character, Monster *monster) {
     monster->life -= damage;
 
 }
-
 
 void monster_attack(Character *character, Monster *monster) {
     int damage = rand() % (monster->max_power - monster->min_power + 1) + monster->min_power;
@@ -300,34 +303,35 @@ void monster_attack(Character *character, Monster *monster) {
 
 void fight(Character *character, Monster **list_monsters, int num_monsters) {
 
+    // TODO: if offensive, defensive, heal spell = NULL afficher que le joueur les possede pas
+
     system("clear");
 
-//    int i = 0;
-//    srand(time(NULL));
-//    character->is_alive = 1;
-//
-//    int round = 1;
-//
-//    while (character->is_alive && i < num_monsters) {
-//
-//        printf("[ROUND : %d]\n", round);
-//
-//        character_attack(character, list_monsters[i]);
-//
-//        if (list_monsters[i]->life <= 0) {
-//            i++;
-//            continue;
-//        }
-//
-//        monster_attack(character, list_monsters[i]);
-//
-//        if (character->current_health <= 0) {
-//            character->is_alive = 0;
-//            break;
-//        }
-//
-//        round++;
-//    }
+    int i = 0;
+    srand(time(NULL));
+    character->is_alive = 1;
+    int round = 1;
+
+    while (character->is_alive && i < num_monsters) {
+
+        printf("[ROUND : %d]\n", round);
+
+        character_attack(character, list_monsters[i]);
+
+        if (list_monsters[i]->life <= 0) {
+            i++;
+            continue;
+        }
+
+        monster_attack(character, list_monsters[i]);
+
+        if (character->current_health <= 0) {
+            character->is_alive = 0;
+            break;
+        }
+
+        round++;
+    }
 
     if (character->is_alive) {
         character->gold += rand() % 101;
