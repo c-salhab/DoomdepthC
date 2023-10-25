@@ -12,11 +12,10 @@ typedef struct{
     char *weapon_name;
     char *description;
     float physical_damage;
-    float magical_damage;
     float durability;
 } Weapon;
 
-Weapon *create_weapon(char *type, char *weapon_name, char *description, float physical_damage, float magical_damage, float durability);
+Weapon *create_weapon(char *type, char *weapon_name, char *description, float physical_damage, float durability);
 
 #endif //DOOMDEPTHC_WEAPON_H
 

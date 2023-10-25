@@ -7,7 +7,6 @@ Projet DoomdepthC
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
 #include "../headers/character.h"
 #include "../headers/monsters.h"
 #include "../weapon/weapon.c"
@@ -188,15 +187,14 @@ void set_weapon(Character *character, Weapon *selection) {
     character->inventory->equipped_weapon->weapon_name = strdup(selection->weapon_name);
     character->inventory->equipped_weapon->description = strdup(selection->description);
     character->inventory->equipped_weapon->physical_damage = selection->physical_damage;
-    character->inventory->equipped_weapon->magical_damage = selection->magical_damage;
     character->inventory->equipped_weapon->durability = selection->durability;
 }
 
 void takes_weapon(Character *character, int weapon) {
 
-    Weapon *pan_flute = create_weapon("Wind", "Pan Flute", "A magical flute that enchants the enemy", 20, 10, 100);
-    Weapon *wand_of_callipso = create_weapon("Magic", "Wand of Callipso", "A legendary wand used by ancient wizards", 30, 15, 120);
-    Weapon *devil_axe = create_weapon("Melee", "Devil Axe", "A cursed axe that deals massive damage", 50, 0, 150);
+    Weapon *pan_flute = create_weapon("Wind", "Pan Flute", "A magical flute that enchants the enemy", 20,  5);
+    Weapon *wand_of_callipso = create_weapon("Magic", "Wand of Callipso", "A legendary wand used by ancient wizards",  15, 4);
+    Weapon *devil_axe = create_weapon("Melee", "Devil Axe", "A cursed axe that deals massive damage", 50, 3);
 
     Weapon *can_use[3];
     can_use[0] = pan_flute;
@@ -205,7 +203,7 @@ void takes_weapon(Character *character, int weapon) {
 
     set_weapon(character, can_use[weapon]);
 
-    printf("\n%s takes a %s\n", character->username, character->inventory->equipped_weapon->weapon_name);
+    printf("\n\n%s got a %s\n", character->username, character->inventory->equipped_weapon->weapon_name);
 
 }
 
@@ -219,15 +217,14 @@ void set_armor(Character *character, Armor *selection) {
     character->inventory->equipped_armor->armor_name = strdup(selection->armor_name);
     character->inventory->equipped_armor->description = selection->description;
     character->inventory->equipped_armor->physical_defense = selection->physical_defense;
-    character->inventory->equipped_armor->magical_defense = selection->magical_defense;
     character->inventory->equipped_armor->durability = selection->durability;
 
 }
 
 void takes_armor(Character *character, int armor) {
 
-    Armor *helmet_of_athena = create_armor("Helmet of Athena", "A divine helmet that boosts defense", 50, 20, 100);
-    Armor *ares_crown = create_armor("Ares Crown", "A legendary crown worn by powerful warriors", 40, 30, 80);
+    Armor *helmet_of_athena = create_armor("Helmet of Athena", "A divine helmet that boosts defense", 50, 3);
+    Armor *ares_crown = create_armor("Ares Crown", "A legendary crown worn by powerful warriors", 40, 4);
 
     Armor *can_wear[2];
     can_wear[0] = helmet_of_athena;
@@ -235,7 +232,7 @@ void takes_armor(Character *character, int armor) {
 
     set_armor(character, can_wear[armor]);
 
-    printf("\n%s wears a ", character->username);
+    printf("\n\n%s got a ", character->username);
     if (can_wear[armor] == NULL) {
         printf("nothing to protect himself.\n\n");
     } else {
@@ -254,49 +251,131 @@ void takes_inventory(Character *character) {
     } else if (lucky_luck == 1) {
         takes_armor(character, rand() % 2);
     } else {
-        printf("\n%s is unlucky, he received nothing to help him in this fight!\n\n", character->username);
+        printf("\n\n%s is unlucky, he received nothing after winning this fight!\n\n", character->username);
     }
 }
 
-void character_attack(Character *character, Monster *monster) {
+void check_inventory(Character *character) {
 
-    // TODO: modifier le code pour enlever les if != NULL et mettre a jour le code pour faire un propre combat
+    for(int k = 0; k <= 50; k++){
+        printf("X");
+    }
+
+    printf("\n");
+
     if (character->offensive_spell != NULL) {
-        printf("%s uses the offensive spell : %s\n", character->username, character->offensive_spell->spell_name);
-        int damage = character->offensive_spell->offensive;
-        monster->life -= damage;
-    } else if (!is_printed) {
-        printf("%s doesn't have any offensive spell to use !\n", character->username);
-        is_printed = 1;
+        printf("- %s has a %s as an offensive spell.\n", character->username, character->offensive_spell->spell_name);
+    }else{
+        printf("- %s doesn't have any offensive spell to use !\n", character->username);
     }
 
     if (character->heal_spell != NULL) {
-        printf("%s uses the heal spell : %s\n", character->username, character->heal_spell->spell_name);
-    } else if (!is_printed) {
-        printf("%s doesn't have any heal spell to use !\n", character->username);
-        is_printed = 1;
+        printf("- %s has a %s as a heal spell.\n", character->username, character->heal_spell->spell_name);
+    }else{
+        printf("- %s doesn't have any heal spell to use !\n", character->username);
     }
 
     if (character->defensive_spell != NULL) {
-        printf("%s uses the defensive spell : %s\n", character->username, character->defensive_spell->spell_name);
-    } else if (!is_printed) {
-        printf("%s doesn't have any defensive spell to use !\n", character->username);
-        is_printed = 1;
+        printf("- %s has a %s as a defensive spell.\n", character->username, character->defensive_spell->spell_name);
+    }else{
+        printf("- %s doesn't have any defensive spell to use !\n", character->username);
     }
 
-    printf("%s attaque le monstre\n", character->username);
-    int damage = 10;
+
+    if (character->inventory->equipped_weapon != NULL) {
+        printf("- %s has a %s as a weapon.\n", character->username, character->inventory->equipped_weapon->weapon_name);
+    }else{
+        printf("- %s doesn't have any weapon to use !\n", character->username);
+    }
+
+    if (character->inventory->equipped_armor != NULL) {
+        printf("- %s has a %s as an armor.\n", character->username, character->inventory->equipped_armor->armor_name);
+    }else{
+        printf("- %s doesn't have any armor to use !\n", character->username);
+    }
+
+    for(int a = 0; a <= 50; a++){
+        printf("X");
+    }
+
+    printf("\n");
+}
+
+void character_attack(Character *character, Monster *monster) {
+    printf("%s attacks the monsters!\n", character->username);
+
+    int damage = (int)((float)character->current_health * 0.1) + 10;
+
+    if (character->inventory != NULL) {
+
+        if (character->inventory->equipped_weapon != NULL) {
+            damage += character->inventory->equipped_weapon->physical_damage;
+            printf("%s uses the %s weapon to attack the monsters.\n%s\n", character->username, character->inventory->equipped_weapon->weapon_name, character->inventory->equipped_weapon->description);
+            character->inventory->equipped_weapon->durability -= 1;
+            if (character->inventory->equipped_weapon->durability <= 0) {
+                character->inventory->equipped_weapon = NULL;
+                printf("%s's weapon has broken!\n", character->username);
+            }
+        } else {
+            printf("%s doesn't have any equipped weapons!\n", character->username);
+        }
+
+        if (character->inventory->equipped_armor != NULL) {
+            character->current_health += character->inventory->equipped_armor->physical_defense;
+            printf("%s uses the %s armor to defend against the monsters.\n%s\n", character->username, character->inventory->equipped_armor->armor_name, character->inventory->equipped_armor->description);
+            character->inventory->equipped_armor->durability -= 1;
+            if (character->inventory->equipped_armor->durability <= 0) {
+                character->inventory->equipped_armor = NULL;
+                printf("%s's armor has broken!\n", character->username);
+            }
+        } else {
+            printf("%s doesn't have any equipped armor!\n", character->username);
+        }
+
+    } else {
+        printf("%s doesn't have any inventory!\n", character->username);
+    }
+
+    if (character->offensive_spell != NULL) {
+        damage += character->offensive_spell->offensive;
+        printf("%s uses the offensive spell %s.\n", character->username, character->offensive_spell->spell_name);
+    } else {
+        printf("%s doesn't have any offensive spells!\n", character->username);
+    }
+
+    if (character->heal_spell != NULL && character->current_mana <= 500) {
+        float heal_amount = character->heal_spell->heal;
+        character->current_mana += heal_amount;
+        printf("%s uses the heal spell %s.\n", character->username, character->heal_spell->spell_name);
+    } else {
+        printf("%s doesn't have any heal spells or doesn't have enough mana!\n", character->username);
+    }
+
+    if (character->defensive_spell != NULL) {
+        character->current_health += character->defensive_spell->defensive;
+        printf("%s uses the defensive spell %s.\n", character->username, character->defensive_spell->spell_name);
+    } else {
+        printf("%s doesn't have any defensive spells!\n", character->username);
+    }
+
     monster->life -= damage;
 
+    for(int j = 0; j < 50; j++){
+        printf("-");
+    }
 }
 
 void monster_attack(Character *character, Monster *monster) {
     int damage = rand() % (monster->max_power - monster->min_power + 1) + monster->min_power;
-    if (character->defensive_spell != NULL) {
-        damage -= character->defensive_spell->cost;
-    }
-    if (damage > 0) {
-        character->current_health -= damage;
+
+    character->current_health -= damage;
+    character->current_mana -= damage;
+
+    printf("Monster is attacking %s!\n", character->username);
+    printf("The monster causes %d damage to %s!\n", damage, character->username);
+
+    for(int j = 0; j < 50; j++){
+        printf("-");
     }
 }
 
@@ -307,6 +386,9 @@ void has_leveled_up(Character *character){
 
     character->current_health += character->current_health * 0.5;
     character->current_mana += character->current_mana * 0.5;
+
+    max_health +=   character->current_health * 0.5;
+    max_mana += character->current_mana * 0.5;
 
     printf("\n%s has leveled up !\n", character->username);
     printf("%s is level %d !\n", character->username, character->level);
@@ -322,49 +404,60 @@ void gain_exp(Character *character){
         }
 }
 
+void restore(Character *character){
+    character->current_health = max_health;
+    character->current_mana = max_mana;
+    character->is_alive = 1;
+}
+
 void fight(Character *character, Monster **list_monsters, int num_monsters) {
 
-    // TODO: if offensive, defensive, heal spell = NULL afficher que le joueur les possede pas
-
     system("clear");
+    check_inventory(character);
 
-//    int i = 0;
-//    srand(time(NULL));
-//    character->is_alive = 1;
-//    int round = 1;
-//
-//    while (character->is_alive && i < num_monsters) {
-//
-//        printf("[ROUND : %d]\n", round);
-//
-//        character_attack(character, list_monsters[i]);
-//
-//        if (list_monsters[i]->life <= 0) {
-//            i++;
-//            continue;
-//        }
-//
-//        monster_attack(character, list_monsters[i]);
-//
-//        if (character->current_health <= 0) {
-//            character->is_alive = 0;
-//            break;
-//        }
-//
-//        round++;
-//    }
+    int i = 0;
+    restore(character);
+    int round = 1;
+
+    printf("%s will fight %d monster !", character->username, num_monsters)
+    while (character->is_alive && i < num_monsters) {
+
+        printf("\n");
+        printf("[ROUND : %d]\n", round);
+
+        round++;
+
+        if (round % 2 == 0) {
+            character_attack(character, list_monsters[i]);
+        } else {
+            monster_attack(character, list_monsters[i]);
+        }
+
+        if (list_monsters[i]->life <= 0) {
+            i++;
+            continue;
+        }
+
+        if (character->current_health <= 0) {
+            character->is_alive = 0;
+            break;
+        }
+
+    }
 
     if (character->is_alive) {
-        character->gold += rand() % 51;
+
+        character->gold += 30;
+
         if(has_inventory(character)){
             takes_inventory(character);
         }
 
         gain_exp(character);
 
-        printf("%s won the game ! Congratulations ! \n", character->username);
+        printf("\n%s won the game ! Congratulations ! \n", character->username);
     } else {
-        printf("You were defeated by the monsters, try the next time !\n");
+        printf("\nYou were defeated by the monsters, try the next time !\n");
     }
 
 }

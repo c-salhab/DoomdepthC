@@ -11,10 +11,9 @@ typedef struct{
     char *armor_name;
     char *description;
     float physical_defense;
-    float magical_defense;
     int durability;
 } Armor;
 
-Armor *create_armor(char *armor_name, char *description, float physical_defense, float magical_defense, int durability);
+Armor *create_armor(char *armor_name, char *description, float physical_defense, int durability);
 
 #endif //DOOMDEPTHC_ARMOR_H

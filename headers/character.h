@@ -33,8 +33,6 @@ int exp_needed_to_level_up = 50;
 int max_health = 1000;
 int max_mana = 1000;
 
-int is_printed = 0;
-
 Character * init_character(char *name);
 int has_inventory(Character *character);
 void show_specs(Character *character);
@@ -48,5 +46,6 @@ void character_attack(Character *character, Monster *monster);
 void monster_attack(Character *character, Monster *monster);
 void has_leveled_up(Character *character);
 void gain_exp(Character *character);
+void check_inventory(Character *character);
 
 #endif
