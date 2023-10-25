@@ -11,6 +11,7 @@ Projet DoomdepthC
 #include "../headers/monsters.h"
 #include "../weapon/weapon.c"
 #include "../armor/armor.c"
+#include "../headers/spells.h"
 #include <ctype.h>
 
 
@@ -180,6 +181,14 @@ int has_inventory(Character *character) {
     }
 }
 
+int has_spells(Character *character) {
+    if (character->defensive_spell == NULL || character->offensive_spell == NULL || character->heal_spell == NULL) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
 void set_weapon(Character *character, Weapon *selection) {
     if (character->inventory->equipped_weapon != NULL) {
         free(character->inventory->equipped_weapon->weapon_name);
@@ -209,6 +218,103 @@ void takes_weapon(Character *character, int weapon) {
     set_weapon(character, can_use[weapon]);
 
     printf("\n\n%s got a %s\n", character->username, character->inventory->equipped_weapon->weapon_name);
+
+}
+
+void set_offensive_spells(Character *character, Spell *offensive_spell){
+    if (character->offensive_spell != NULL) {
+        free(character->offensive_spell->spell_name);
+        free(character->offensive_spell);
+    }
+
+    character->offensive_spell = (Spell*)malloc(sizeof(Spell));
+    character->offensive_spell->spell_name = strdup(offensive_spell->spell_name);
+    character->offensive_spell->cost = offensive_spell->cost;
+    character->offensive_spell->offensive = offensive_spell->offensive;
+    character->offensive_spell->defensive = offensive_spell->defensive;
+    character->offensive_spell->heal = offensive_spell->heal;
+}
+
+void takes_offensive_spells(Character *character, int offensive) {
+
+    Spell *dragon_breath = create_spell("Dragon Breath", 100, 500, 0,0);
+    Spell *eat_this = create_spell("Eat This", 65, 300, 0, 0);
+    Spell *lightning_chain = create_spell("Lightning Chain", 65, 300, 0,0);
+
+    Spell *can_use[3];
+    can_use[0] = dragon_breath;
+    can_use[1] = eat_this;
+    can_use[2] = lightning_chain;
+
+    set_offensive_spells(character, can_use[offensive]);
+
+    printf("\n\n%s got an offensive spell : %s\n", character->username, character->offensive_spell->spell_name);
+
+}
+
+void set_defensive_spells(Character *character, Spell *selection) {
+
+    if (character->defensive_spell != NULL) {
+        free(character->defensive_spell->spell_name);
+        free(character->defensive_spell);
+    }
+
+    character->defensive_spell = (Spell*)malloc(sizeof(Spell));
+    character->defensive_spell->spell_name = strdup(selection->spell_name);
+    character->defensive_spell->cost = selection->cost;
+    character->defensive_spell->offensive = selection->offensive;
+    character->defensive_spell->defensive = selection->defensive;
+    character->defensive_spell->heal = selection->heal;
+
+}
+
+void takes_defensive_spells(Character *character, int defensive) {
+
+    Spell *dragon_skin = create_spell("Dragon Skin", 40, 0, 40, 0);
+    Spell *protected_area = create_spell("Protected Area", 40, 0,40, 0);
+    Spell *stick_to_me = create_spell("Stick To Me", 100, 0,120, 0);
+
+    Spell *can_use[3];
+    can_use[0] = dragon_skin;
+    can_use[1] = protected_area;
+    can_use[2] = stick_to_me;
+
+    set_defensive_spells(character, can_use[defensive]);
+
+    printf("\n\n%s got a defensive spell : %s\n", character->username, character->defensive_spell->spell_name);
+
+}
+
+void set_heal_spells(Character *character, Spell *selection) {
+
+    if (character->heal_spell != NULL) {
+        free(character->heal_spell->spell_name);
+        free(character->heal_spell);
+    }
+
+    character->heal_spell = (Spell*)malloc(sizeof(Spell));
+    character->heal_spell->spell_name = strdup(selection->spell_name);
+    character->heal_spell->cost = selection->cost;
+    character->heal_spell->offensive = selection->offensive;
+    character->heal_spell->defensive = selection->defensive;
+    character->heal_spell->heal = selection->heal;
+
+}
+
+void takes_heal_spells(Character *character, int heal) {
+
+    Spell *healing_aura = create_spell("Healing Aura", 83, 0, 0, 150);
+    Spell *healing_light_house = create_spell("Healing Light House", 130, 0, 0, 300);
+    Spell *heart_of_dragon = create_spell("Heart Of Dragon", 210, 0, 0, 500);
+
+    Spell *can_use[3];
+    can_use[0] = healing_aura;
+    can_use[1] = healing_light_house;
+    can_use[2] = heart_of_dragon;
+
+    set_heal_spells(character, can_use[heal]);
+
+    printf("\n\n%s got a heal spell : %s\n", character->username, character->heal_spell->spell_name);
 
 }
 
@@ -255,6 +361,20 @@ void takes_inventory(Character *character) {
         takes_weapon(character, rand() % 3);
     } else if (lucky_luck == 1) {
         takes_armor(character, rand() % 2);
+    } else {
+        printf("\n\n%s is unlucky, he received nothing after winning this fight!\n\n", character->username);
+    }
+}
+
+void takes_spells(Character *character) {
+    int lucky_luck = rand() % 3;
+
+    if (lucky_luck == 0) {
+        takes_offensive_spells(character, rand() % 3);
+    } else if (lucky_luck == 1) {
+        takes_defensive_spells(character, rand() % 3);
+    } else if (lucky_luck == 2) {
+        takes_heal_spells(character, rand() % 3);
     } else {
         printf("\n\n%s is unlucky, he received nothing after winning this fight!\n\n", character->username);
     }
@@ -474,8 +594,16 @@ void fight(Character *character, Monster **list_monsters, int num_monsters) {
 
         character->gold += 30;
 
-        if(has_inventory(character)){
-            takes_inventory(character);
+        int lucky_luck = rand() % 2;
+
+        if (lucky_luck == 0) {
+            if (has_inventory(character)) {
+                takes_inventory(character);
+            }
+        }else if(lucky_luck == 1){
+            if(has_spells(character)){
+                takes_spells(character);
+            }
         }
 
         gain_exp(character);
