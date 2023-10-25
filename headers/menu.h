@@ -6,3 +6,4 @@ Projet DoomdepthC
 
 void display_menu();
 void init_game();
+int get_list_size(Monster **list_monsters);
