@@ -47,5 +47,6 @@ void monster_attack(Character *character, Monster *monster);
 void has_leveled_up(Character *character);
 void gain_exp(Character *character);
 void check_inventory(Character *character);
+void restore(Character *character);
 
 #endif

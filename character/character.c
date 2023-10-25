@@ -95,8 +95,11 @@ void show_specs(Character *character){
         printf("Life : %.2f\n", character->current_health);
     }
 
-    printf("Mana : %.2f\n", character->current_mana);
-
+    if(character->current_mana < 0){
+        printf("Mana : 00.00\n");
+    }else{
+        printf("Mana : %.2f\n", character->current_mana);
+    }
 
     str = "Spells : ";
     size = strlen(str);
@@ -316,8 +319,6 @@ void character_attack(Character *character, Monster *monster) {
                 character->inventory->equipped_weapon = NULL;
                 printf("%s's weapon has broken!\n", character->username);
             }
-        } else {
-            printf("%s doesn't have any equipped weapons!\n", character->username);
         }
 
         if (character->inventory->equipped_armor != NULL) {
@@ -328,8 +329,6 @@ void character_attack(Character *character, Monster *monster) {
                 character->inventory->equipped_armor = NULL;
                 printf("%s's armor has broken!\n", character->username);
             }
-        } else {
-            printf("%s doesn't have any equipped armor!\n", character->username);
         }
 
     } else {
@@ -339,23 +338,17 @@ void character_attack(Character *character, Monster *monster) {
     if (character->offensive_spell != NULL) {
         damage += character->offensive_spell->offensive;
         printf("%s uses the offensive spell %s.\n", character->username, character->offensive_spell->spell_name);
-    } else {
-        printf("%s doesn't have any offensive spells!\n", character->username);
     }
 
     if (character->heal_spell != NULL && character->current_mana <= 500) {
         float heal_amount = character->heal_spell->heal;
         character->current_mana += heal_amount;
         printf("%s uses the heal spell %s.\n", character->username, character->heal_spell->spell_name);
-    } else {
-        printf("%s doesn't have any heal spells or doesn't have enough mana!\n", character->username);
     }
 
     if (character->defensive_spell != NULL) {
         character->current_health += character->defensive_spell->defensive;
         printf("%s uses the defensive spell %s.\n", character->username, character->defensive_spell->spell_name);
-    } else {
-        printf("%s doesn't have any defensive spells!\n", character->username);
     }
 
     monster->life -= damage;
@@ -372,7 +365,7 @@ void monster_attack(Character *character, Monster *monster) {
     character->current_mana -= damage;
 
     printf("Monster is attacking %s!\n", character->username);
-    printf("The monster causes %d damage to %s!\n", damage, character->username);
+    printf("The monster causes %d damages to %s!\n", damage, character->username);
 
     for(int j = 0; j < 50; j++){
         printf("-");
@@ -419,7 +412,10 @@ void fight(Character *character, Monster **list_monsters, int num_monsters) {
     restore(character);
     int round = 1;
 
-    printf("%s will fight %d monster !", character->username, num_monsters)
+    printf("\x1b[31m");
+    printf("\n%s will fight %d monsters !\n", character->username, num_monsters);
+    printf("\x1b[0m");
+
     while (character->is_alive && i < num_monsters) {
 
         printf("\n");
@@ -455,9 +451,14 @@ void fight(Character *character, Monster **list_monsters, int num_monsters) {
 
         gain_exp(character);
 
-        printf("\n%s won the game ! Congratulations ! \n", character->username);
+        printf("\x1b[32m");
+        printf("\n\n%s won the game ! Congratulations ! \n", character->username);
+        printf("\x1b[0m");
+        
     } else {
-        printf("\nYou were defeated by the monsters, try the next time !\n");
+        printf("\x1b[31m");
+        printf("\n\nYou were defeated by the monsters, try the next time !\n");
+        printf("\x1b[0m");
     }
 
 }

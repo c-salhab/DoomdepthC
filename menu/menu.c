@@ -144,6 +144,8 @@ void display_menu() {
                 Monster **monsters = generate_monster();
                 int size = get_list_size(monsters);
 
+                scale_monster_stats(monsters, size, character->level);
+
                 if(monsters){
                     // printf("%d", size);
                     fight(character, monsters, size);
