@@ -475,7 +475,7 @@ void check_inventory(Character *character) {
 void character_attack(Character *character, Monster *monster) {
     printf("%s attacks the monsters!\n", character->username);
 
-    int damage = (int)((float)character->current_health * 0.1) + 10;
+    int damage = (int)((float)character->current_health * 0.5) + 10;
 
     if (character->inventory != NULL) {
 
