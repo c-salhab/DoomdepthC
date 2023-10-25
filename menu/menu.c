@@ -7,6 +7,7 @@ Projet DoomdepthC
 #include "../headers/menu.h"
 #include "../headers/monsters.h"
 #include "../headers/character.h"
+#include "../headers/spells.h"
 #include "../character/character.c"
 #include "../monsters/monsters.c"
 #include "../spells/spells.c"

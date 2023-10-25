@@ -8,6 +8,7 @@ Projet DoomdepthC
 #include <stdlib.h>
 #include <string.h>
 #include "../headers/character.h"
+#include "../headers/spells.h"
 
 Spell *create_spell(char *spell_name, int cost, int offensive, int defensive, int heal) {
 
