@@ -15,9 +15,10 @@ typedef struct {
     int offensive;
     int defensive;
     int heal;
+    int is_used;
 } Spell;
 
-Spell *create_spell(char *spell_name, int cost, int offensive, int defensive, int heal);
+Spell *create_spell(char *spell_name, int cost, int offensive, int defensive, int heal, int used);
 //char *get_offensive(Character *character);
 //void set_offensive(Character *character, Spell *selection);
 //void select_offensive_spell(Character *character);
