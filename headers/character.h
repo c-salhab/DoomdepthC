@@ -31,8 +31,10 @@ typedef struct {
 
 int exp_needed_to_level_up = 50;
 int max_health = 1000;
-int max_mana = 0;
+int max_mana = 1000;
+
 int is_printed = 0;
+
 Character * init_character(char *name);
 
 void show_specs(Character *character);

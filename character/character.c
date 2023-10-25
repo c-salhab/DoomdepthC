@@ -19,8 +19,8 @@ Character *init_character(char *name) {
     character->username = name;
 
     character->is_alive = 1;
-    character->current_health = 100;
-    character->current_mana = 100;
+    character->current_health = max_health;
+    character->current_mana = max_mana;
 
     character->level = 1;
     character->exp = 0;
@@ -300,6 +300,27 @@ void monster_attack(Character *character, Monster *monster) {
     }
 }
 
+void has_leveled_up(Character *character){
+    character->level += 1;
+    character->exp = 0;
+    exp_needed_to_level_up *= 1.5;
+
+    character->current_health += character->current_health * 0.5;
+    character->current_mana += character->current_mana * 0.5;
+
+    printf("\n%s has leveled up !\n", character->username);
+    printf("%s is level %d !\n", character->username, character->level);
+}
+
+void gain_exp(Character *character){
+        float ratio = 0.5;
+        
+        character->exp += 25 * ratio;
+        
+        if (character->exp >= exp_needed_to_level_up) {
+            has_leveled_up(character);
+        }
+}
 
 void fight(Character *character, Monster **list_monsters, int num_monsters) {
 
@@ -307,37 +328,40 @@ void fight(Character *character, Monster **list_monsters, int num_monsters) {
 
     system("clear");
 
-    int i = 0;
-    srand(time(NULL));
-    character->is_alive = 1;
-    int round = 1;
-
-    while (character->is_alive && i < num_monsters) {
-
-        printf("[ROUND : %d]\n", round);
-
-        character_attack(character, list_monsters[i]);
-
-        if (list_monsters[i]->life <= 0) {
-            i++;
-            continue;
-        }
-
-        monster_attack(character, list_monsters[i]);
-
-        if (character->current_health <= 0) {
-            character->is_alive = 0;
-            break;
-        }
-
-        round++;
-    }
+//    int i = 0;
+//    srand(time(NULL));
+//    character->is_alive = 1;
+//    int round = 1;
+//
+//    while (character->is_alive && i < num_monsters) {
+//
+//        printf("[ROUND : %d]\n", round);
+//
+//        character_attack(character, list_monsters[i]);
+//
+//        if (list_monsters[i]->life <= 0) {
+//            i++;
+//            continue;
+//        }
+//
+//        monster_attack(character, list_monsters[i]);
+//
+//        if (character->current_health <= 0) {
+//            character->is_alive = 0;
+//            break;
+//        }
+//
+//        round++;
+//    }
 
     if (character->is_alive) {
-        character->gold += rand() % 101;
+        character->gold += rand() % 51;
         if(has_inventory(character)){
             takes_inventory(character);
         }
+
+        gain_exp(character);
+
         printf("%s won the game ! Congratulations ! \n", character->username);
     } else {
         printf("You were defeated by the monsters, try the next time !\n");
