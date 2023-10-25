@@ -13,6 +13,7 @@ Projet DoomdepthC
 #include "../armor/armor.c"
 #include <ctype.h>
 
+
 Character *init_character(char *name) {
 
     Character *character = malloc(sizeof(Character));
@@ -269,20 +270,44 @@ void check_inventory(Character *character) {
 
     if (character->offensive_spell != NULL) {
         printf("- %s has a %s as an offensive spell.\n", character->username, character->offensive_spell->spell_name);
-    }else{
-        printf("- %s doesn't have any offensive spell to use !\n", character->username);
+        do {
+            printf("Do you want to use the offensive spell %s during the attack? (y)es or (n)o: ", character->offensive_spell->spell_name);
+            scanf(" %c", &offensive_spell);
+            offensive_spell = toupper(offensive_spell);
+            if (offensive_spell != 'Y' && offensive_spell != 'N') {
+                printf("You have to choose between yes (Y) or no (N)!\n");
+            }
+        } while (offensive_spell != 'Y' && offensive_spell != 'N');
+    } else {
+        printf("- %s doesn't have any offensive spell to use!\n", character->username);
     }
 
     if (character->heal_spell != NULL) {
         printf("- %s has a %s as a heal spell.\n", character->username, character->heal_spell->spell_name);
-    }else{
-        printf("- %s doesn't have any heal spell to use !\n", character->username);
+        do {
+            printf("Do you want to use the heal spell %s during the attack? (y)es or (n)o: ", character->heal_spell->spell_name);
+            scanf(" %c", &heal_spell);
+            heal_spell = toupper(heal_spell);
+            if (heal_spell != 'Y' && heal_spell != 'N') {
+                printf("You have to choose between yes (Y) or no (N)!\n");
+            }
+        } while (heal_spell != 'Y' && heal_spell != 'N');
+    } else {
+        printf("- %s doesn't have any heal spell to use!\n", character->username);
     }
 
     if (character->defensive_spell != NULL) {
-        printf("- %s has a %s as a defensive spell.\n", character->username, character->defensive_spell->spell_name);
-    }else{
-        printf("- %s doesn't have any defensive spell to use !\n", character->username);
+        printf("- %s has a %s as a heal spell.\n", character->username, character->defensive_spell->spell_name);
+        do {
+            printf("Do you want to use the defensive spell %s during the attack? (y)es or (n)o: ", character->defensive_spell->spell_name);
+            scanf(" %c", &defensive_spell);
+            defensive_spell = toupper(defensive_spell);
+            if (defensive_spell != 'Y' && defensive_spell != 'N') {
+                printf("You have to choose between yes (Y) or no (N)!\n");
+            }
+        } while (defensive_spell != 'Y' && defensive_spell != 'N');
+    } else {
+        printf("- %s doesn't have any defensive spell to use!\n", character->username);
     }
 
 
@@ -303,6 +328,7 @@ void check_inventory(Character *character) {
     }
 
     printf("\n");
+
 }
 
 void character_attack(Character *character, Monster *monster) {
@@ -336,53 +362,23 @@ void character_attack(Character *character, Monster *monster) {
         printf("%s doesn't have any inventory!\n", character->username);
     }
 
-    if (character->offensive_spell != NULL) {
-        printf("Do you want to use the offensive spell %s ? (y)es or (n)o  ", character->offensive_spell->spell_name);
-        char use_offensive_spell;
-        scanf("%c", &use_offensive_spell);
-        use_offensive_spell = toupper(use_offensive_spell);
-        if (use_offensive_spell == 'Y') {
+    if (character->offensive_spell != NULL && offensive_spell == 'Y') {
             damage += character->offensive_spell->offensive;
             character->current_mana -= character->offensive_spell->cost;
             printf("%s uses the offensive spell %s.\n", character->username, character->offensive_spell->spell_name);
-        }else if(use_offensive_spell == 'N'){
-
-        }else{
-            printf("You have to choose between yes (Y) or no (N) !\n");
-        }
     }
 
-    if (character->heal_spell != NULL && character->current_mana <= 500) {
-        printf("Do you want to use the heal spell %s ? (y)es or (n)o ", character->heal_spell->spell_name);
-        char use_heal_spell;
-        scanf("%c", &use_heal_spell);
-        use_heal_spell = toupper(use_heal_spell);
-
-        if (use_heal_spell == 'Y') {
+    if (character->heal_spell != NULL && heal_spell == 'Y') {
             float heal_amount = character->heal_spell->heal;
             character->current_health += heal_amount;
             character->current_mana -= character->heal_spell->cost;
             printf("%s uses the heal spell %s.\n", character->username, character->heal_spell->spell_name);
-        }else if(use_heal_spell == 'N'){
-
-        }else{
-            printf("You have to choose between yes (Y) or no (N) !\n");
-        }
     }
 
-    if (character->defensive_spell != NULL) {
-        printf("Do you want to use the defensive spell %s ? (y)es or (n)o ", character->defensive_spell->spell_name);
-        char use_defensive_spell;
-        scanf("%c", &use_defensive_spell);
-        if (use_defensive_spell == 'Y') {
+    if (character->defensive_spell != NULL && defensive_spell == 'Y') {
             damage += character->defensive_spell->defensive;
             character->current_mana -= character->defensive_spell->cost;
             printf("%s uses the defensive spell %s.\n", character->username, character->defensive_spell->spell_name);
-        }else if(use_defensive_spell == 'N'){
-
-        }else{
-            printf("You have to choose between yes (Y) or no (N) !\n");
-        }
     }
 
     monster->life -= damage;

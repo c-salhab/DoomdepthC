@@ -32,6 +32,9 @@ typedef struct {
 int exp_needed_to_level_up = 50;
 int max_health = 1000;
 int max_mana = 1000;
+char offensive_spell;
+char defensive_spell;
+char heal_spell;
 
 Character * init_character(char *name);
 int has_inventory(Character *character);
