@@ -166,6 +166,11 @@ void display_menu() {
                     fight(character, monsters, size);
                 }
 
+                for (int i = 0; i < size; i++) {
+                    free(monsters[i]);
+                }
+                free(monsters);
+
                 break;
 
             case 2:
@@ -203,6 +208,10 @@ void display_menu() {
             default:
                 system("clear");
                 printf("\nChoose between 0 and 4 !\n");
+
+
         }
+
     }
+
 }

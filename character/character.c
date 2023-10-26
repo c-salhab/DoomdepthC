@@ -255,6 +255,21 @@ void takes_weapon(Character *character, int weapon) {
 
     printf("\n\n%s got a weapon : %s\n", character->username, character->inventory->equipped_weapon->weapon_name);
 
+    // free the dynamically allocated memory for each weapon
+    free(pan_flute->type);
+    free(pan_flute->weapon_name);
+    free(pan_flute->description);
+    free(pan_flute);
+
+    free(wand_of_callipso->type);
+    free(wand_of_callipso->weapon_name);
+    free(wand_of_callipso->description);
+    free(wand_of_callipso);
+
+    free(devil_axe->type);
+    free(devil_axe->weapon_name);
+    free(devil_axe->description);
+    free(devil_axe);
 }
 
 void set_offensive_spells(Character *character, Spell *offensive_spell){
@@ -292,6 +307,10 @@ void takes_offensive_spells(Character *character, int offensive) {
     set_offensive_spells(character, can_use[offensive]);
 
     printf("\n\n%s got an offensive spell : %s\n", character->username, character->offensive_spell->spell_name);
+
+    free(dragon_breath);
+    free(eat_this);
+    free(lightning_chain);
 }
 
 void set_defensive_spells(Character *character, Spell *selection) {
@@ -329,6 +348,10 @@ void takes_defensive_spells(Character *character, int defensive) {
     set_defensive_spells(character, can_use[defensive]);
 
     printf("\n\n%s got a defensive spell : %s\n", character->username, character->defensive_spell->spell_name);
+
+    free(dragon_skin);
+    free(protected_area);
+    free(stick_to_me);
 }
 
 void set_heal_spells(Character *character, Spell *selection) {
@@ -367,6 +390,10 @@ void takes_heal_spells(Character *character, int heal) {
     set_heal_spells(character, can_use[heal]);
 
     printf("\n\n%s got a heal spell : %s\n", character->username, character->heal_spell->spell_name);
+
+    free(heart_of_dragon);
+    free(healing_light_house);
+    free(healing_aura);
 }
 
 void set_armor(Character *character, Armor *selection) {
@@ -402,7 +429,11 @@ void takes_armor(Character *character, int armor) {
     printf("\n\n%s got an armor : %s\n", character->username, character->inventory->equipped_armor->armor_name);
 
     // free the memory allocated for the armors
+    free(helmet_of_athena->armor_name);
+    free(helmet_of_athena->description);
     free(helmet_of_athena);
+    free(ares_crown->armor_name);
+    free(ares_crown->description);
     free(ares_crown);
 }
 
@@ -444,21 +475,33 @@ void check_inventory(Character *character) {
 
     // check and print the availability of offensive, heal, and defensive spells
 
-    if (character->offensive_spell != NULL && character->offensive_spell->is_used == 0) {
-        printf("- %s has a %s as an offensive spell.\n", character->username, character->offensive_spell->spell_name);
+    if (character != NULL && character->offensive_spell != NULL) {
+        if (character->offensive_spell->is_used == 0) {
+            printf("- %s has a %s as an offensive spell.\n", character->username, character->offensive_spell->spell_name);
+        } else if (character->current_mana <= character->offensive_spell->cost) {
+            printf("Insufficient Mana Points !");
+        }
     } else {
         printf("- %s doesn't have any offensive spell to use!\n", character->username);
     }
 
-    if (character->heal_spell != NULL && character->heal_spell->is_used == 0) {
-        printf("- %s has a %s as a heal spell.\n", character->username, character->heal_spell->spell_name);
-    } else {
+    if (character != NULL && character->heal_spell != NULL) {
+        if (character->heal_spell != NULL && character->heal_spell->is_used == 0) {
+            printf("- %s has a %s as a heal spell.\n", character->username, character->heal_spell->spell_name);
+        }else if(character->current_mana <= character->heal_spell->cost) {
+            printf("Insufficient Mana Points !");
+        }
+    }else{
         printf("- %s doesn't have any heal spell to use!\n", character->username);
     }
 
-    if (character->defensive_spell != NULL && character->defensive_spell->is_used == 0) {
-        printf("- %s has a %s as a defensive spell.\n", character->username, character->defensive_spell->spell_name);
-    } else {
+    if (character != NULL && character->defensive_spell != NULL) {
+        if (character->defensive_spell != NULL && character->defensive_spell->is_used == 0) {
+            printf("- %s has a %s as a defensive spell.\n", character->username, character->defensive_spell->spell_name);
+        }else if(character->current_mana <= character->defensive_spell->cost) {
+            printf("Insufficient Mana Points !");
+        }
+    }else{
         printf("- %s doesn't have any defensive spell to use!\n", character->username);
     }
 
