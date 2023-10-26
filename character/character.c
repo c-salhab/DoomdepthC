@@ -674,8 +674,8 @@ void has_leveled_up(Character *character){
     character->current_mana += character->current_mana * 0.5;
 
     // increase the maximum health and mana by 50%
-    max_health += character->current_health * 0.5;
-    max_mana += character->current_mana * 0.5;
+    max_health += character->current_health;
+    max_mana += character->current_mana;
 
     printf("\n%s has leveled up !\n", character->username);
     printf("%s is level %d !\n", character->username, character->level);
