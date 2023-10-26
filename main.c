@@ -7,5 +7,6 @@ Projet DoomdepthC
 #include "menu/menu.c"
 
 int main() {
-      init_game();
+    // initialize the game
+    init_game();
 }
