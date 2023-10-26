@@ -15,22 +15,27 @@ Projet DoomdepthC
 #include <stdlib.h>
 #include <ctype.h>
 
-
 int get_list_size(Monster **list_monsters) {
+    // initialize size to keep track of the size of the list
     int size = 0;
+
+    // continue looping until a null pointer is encountered, which signifies the end of the list
     while (list_monsters[size] != NULL) {
+        // increment the size for each non null element in the list
         size++;
     }
+
+    // return the total size of the list
     return size;
 }
 
 void init_game() {
 
-
+    // initialize the game by clearing the console
     system("clear");
 
     while (1) {
-
+        // print the title in red
         printf("\x1b[31m");
         printf("  ______ _____  ________  ________ ___________ _____ _   _  _____\n");
         printf(" |  _  \\  _  ||  _  |  \\/  |  _  \\  ___| ___ \\_   _| | | |/  ___|\n");
@@ -40,6 +45,7 @@ void init_game() {
         printf(" |___/  \\___/  \\___/\\_|  |_/___/ \\____/\\_|     \\_/ \\_| |_|\\____/\n");
         printf("\x1b[0m");
 
+        // print the menu in blue
         printf("\x1b[34m");
         printf("\nMenu\n");
         printf("\x1b[0m");
@@ -51,12 +57,14 @@ void init_game() {
 
         int choice;
 
+        // ask the user for input
         printf("\x1b[32m");
         printf("Enter your choice : ");
         printf("\x1b[0m");
 
         scanf("%d", &choice);
 
+        // switch statement to handle different menu options
         switch (choice) {
 
             case 1:
@@ -97,9 +105,11 @@ void init_game() {
 }
 
 void display_menu() {
-
+    // display the main menu and handle user choices
+    // clear console screen
     system("clear");
 
+    // declare a character name array and ask for user input
     char name[100];
 
     printf("Hello ! What's your name ? ");
@@ -109,8 +119,10 @@ void display_menu() {
 
     printf("Hello, %s ! Welcome to Doomdepth !\n", name);
 
+    // initialize a character structure using the entered name
     Character *character = init_character(name);
 
+    // infinite loop for displaying the menu and handling user choices
     while (1) {
 
         printf("\x1b[34m");
@@ -132,14 +144,17 @@ void display_menu() {
 
         scanf("%d", &choice);
 
+        // switch statement to handle different menu options
         switch (choice) {
 
             case 0:
+                // show the character's statistics
                 system("clear");
                 show_specs(character);
                 break;
 
             case 1:
+                // generate and scale monsters then start the fight
                 system("clear");
                 Monster **monsters = generate_monster();
                 int size = get_list_size(monsters);
