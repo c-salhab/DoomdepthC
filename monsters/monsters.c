@@ -50,7 +50,7 @@ Monster ** generate_monster() {
 
 void scale_monster_stats(Monster **list_monsters, int num_monsters, int character_level) {
     // calculate the multiplier based on the character's level
-    float multiplier = 1.0 + character_level * 0.1;
+    float multiplier = 1.0 + character_level * 0.4;
 
     // scale the attributes of each monster in the list based on the multiplier
     for (int i = 0; i < num_monsters; i++) {

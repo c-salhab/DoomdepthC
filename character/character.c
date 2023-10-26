@@ -536,7 +536,7 @@ void character_attack(Character *character, Monster *monster) {
     printf("%s attacks the monsters!\n", character->username);
 
     // calculate the initial damage based on the character's current health
-    int damage = (int)((float)character->current_health * 0.5) + 10;
+    int damage = (int)((float)character->current_health * 0.2) + 10;
 
     // check if the character has an inventory
     if (character->inventory != NULL) {
