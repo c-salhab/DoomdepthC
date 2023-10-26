@@ -11,8 +11,10 @@ Projet DoomdepthC
 #include "../headers/spells.h"
 
 Spell *create_spell(char *spell_name, int cost, int offensive, int defensive, int heal, int used) {
-
+    // allocate memory for a new spell struct
     Spell *new_spell = malloc(sizeof(Spell));
+
+    // assign values to the fields of the new spell
     new_spell->spell_name = strdup(spell_name);
     new_spell->cost = cost;
     new_spell->offensive = offensive;
@@ -20,25 +22,30 @@ Spell *create_spell(char *spell_name, int cost, int offensive, int defensive, in
     new_spell->heal = heal;
     new_spell->is_used = used;
 
+    // return the newly created spell
     return new_spell;
 }
 
 char *get_offensive(Character *character) {
-
+    // check if the character has an offensive spell assigned
     if (character->offensive_spell == NULL) {
         return "No offensive spell";
     } else {
+        // return the name of the offensive spell associated with the character
         return character->offensive_spell->spell_name;
     }
 
 }
 
 void set_offensive(Character *character, Spell *selection) {
+    // check if the character already has an offensive spell
     if (character->offensive_spell != NULL) {
+        // free the memory occupied by the previous offensive spell's name and the spell itself
         free(character->offensive_spell->spell_name);
         free(character->offensive_spell);
     }
 
+    // allocate memory for the character's new offensive spell and assign the values from the selected spell
     character->offensive_spell = (Spell*)malloc(sizeof(Spell));
     character->offensive_spell->spell_name = strdup(selection->spell_name);
     character->offensive_spell->cost = selection->cost;
@@ -52,15 +59,19 @@ void set_offensive(Character *character, Spell *selection) {
 void select_offensive_spell(Character *character) {
     system("clear");
 
+    // create different spells
+
     Spell *dragon_breath = create_spell("Dragon Breath", 100, 500, 0,0,0);
     Spell *eat_this = create_spell("Eat This", 65, 300, 0, 0,0);
     Spell *lightning_chain = create_spell("Lightning Chain", 65, 300, 0,0,0);
 
+    // store the spells in an array
     Spell *can_use[3];
     can_use[0] = dragon_breath;
     can_use[1] = eat_this;
     can_use[2] = lightning_chain;
 
+    // get the current offensive spell of the character
     char *offensive = get_offensive(character);
     printf("Your current offensive spell : %s\n", offensive);
     printf("\n");
@@ -73,6 +84,7 @@ void select_offensive_spell(Character *character) {
     printf("Each offensive spell costs 20 gold coins\n\n");
     printf("\x1b[0m");
 
+    // display the available spells for selection
     for (int i = 0; i < 3; i++) {
         printf("%d. %s\n", i + 1, can_use[i]->spell_name);
     }
@@ -87,15 +99,17 @@ void select_offensive_spell(Character *character) {
     system("clear");
 
     if (choice >= 1 && choice <= 3) {
-
+        // check if the character has enough gold to purchase the spell
         if(character->gold >= 20){
 
             if (character->offensive_spell == NULL || character->offensive_spell->spell_name == NULL) {
+                // set the new offensive spell for the character
                 // printf("test ok");
                 character->gold = character->gold - 20;
                 // printf("%s", can_use[choice - 1]->spell_name);
                 set_offensive(character, can_use[choice - 1]);
             } else {
+                // change the offensive spell if it is different from the current one
                 if (strcmp(can_use[choice - 1]->spell_name, character->offensive_spell->spell_name) == 0) {
                     // printf("test ok");
                     system("clear");
@@ -117,6 +131,7 @@ void select_offensive_spell(Character *character) {
         printf("Invalid choice : %d\n", choice);
     }
 
+    // deallocate memory occupied by the spells
     free(dragon_breath->spell_name);
     free(dragon_breath);
     free(eat_this->spell_name);
@@ -126,22 +141,25 @@ void select_offensive_spell(Character *character) {
 }
 
 char *get_defensive(Character *character) {
-
+    // check if the character has a defensive spell assigned
     if (character->defensive_spell == NULL || character->defensive_spell->spell_name == NULL) {
         return "No defensive spell";
     } else {
+        // return the name of the defensive spell associated with the character
         return character->defensive_spell->spell_name;
     }
 
 }
 
 void set_defensive(Character *character, Spell *selection) {
-
+    // check if the character already has a defensive spell
     if (character->defensive_spell != NULL) {
+        // free the memory occupied by the previous defensive spell's name and the spell itself
         free(character->defensive_spell->spell_name);
         free(character->defensive_spell);
     }
 
+    // allocate memory for the character's new defensive spell and assign the values from the selected spell
     character->defensive_spell = (Spell*)malloc(sizeof(Spell));
     character->defensive_spell->spell_name = strdup(selection->spell_name);
     character->defensive_spell->cost = selection->cost;
@@ -155,15 +173,18 @@ void set_defensive(Character *character, Spell *selection) {
 void select_defensive_spell(Character *character) {
     system("clear");
 
+    // create different spells
     Spell *dragon_skin = create_spell("Dragon Skin", 40, 0, 40, 0,0);
     Spell *protected_area = create_spell("Protected Area", 40, 0,40, 0,0);
     Spell *stick_to_me = create_spell("Stick To Me", 100, 0,120, 0,0);
 
+    // store the spells in an array
     Spell *can_use[3];
     can_use[0] = dragon_skin;
     can_use[1] = protected_area;
     can_use[2] = stick_to_me;
 
+    // get the current defensive spell of the character
     char *defensive = get_defensive(character);
     printf("Your current defensive spell : %s\n", defensive);
     printf("\n");
@@ -176,6 +197,7 @@ void select_defensive_spell(Character *character) {
     printf("Each defensive spell costs 30 gold coins\n\n");
     printf("\x1b[0m");
 
+    // display the available spells for selection
     for (int i = 0; i < 3; i++) {
         printf("%d. %s\n", i + 1, can_use[i]->spell_name);
     }
@@ -193,11 +215,13 @@ void select_defensive_spell(Character *character) {
         if(character->gold >= 30) {
 
             if (character->defensive_spell == NULL || character->defensive_spell->spell_name == NULL) {
+                // set the new defensive spell for the character
                 // printf("test ok");
                 character->gold = character->gold - 30;
                 // printf("%s", can_use[choice - 1]->spell_name);
                 set_defensive(character, can_use[choice - 1]);
             } else {
+                // change the defensive spell if it is different from the current one
                 if (strcmp(can_use[choice - 1]->spell_name, character->defensive_spell->spell_name) == 0) {
                     // printf("test ok");
                     system("clear");
@@ -217,6 +241,7 @@ void select_defensive_spell(Character *character) {
         printf("Invalid choice: %d\n", choice);
     }
 
+    // deallocate memory occupied by the spells
     free(dragon_skin->spell_name);
     free(dragon_skin);
     free(protected_area->spell_name);
@@ -226,22 +251,24 @@ void select_defensive_spell(Character *character) {
 }
 
 char *get_heal(Character *character) {
-
+    // check if the character has a heal spell assigned
     if (character->heal_spell == NULL || character->heal_spell->spell_name == NULL) {
         return "No heal spell";
     } else {
+        // return the name of the heal spell associated with the character
         return character->heal_spell->spell_name;
     }
 
 }
 
 void set_heal(Character *character, Spell *selection) {
-
+    // check if the character already has a heal spell
     if (character->heal_spell != NULL) {
+        // free the memory occupied by the previous heal spell's name and the spell itself
         free(character->heal_spell->spell_name);
         free(character->heal_spell);
     }
-
+    // allocate memory for the character's new heal spell and assign the values from the selected spell
     character->heal_spell = (Spell*)malloc(sizeof(Spell));
     character->heal_spell->spell_name = strdup(selection->spell_name);
     character->heal_spell->cost = selection->cost;
@@ -255,15 +282,18 @@ void set_heal(Character *character, Spell *selection) {
 void select_heal_spell(Character *character) {
     system("clear");
 
+    // create different spells
     Spell *healing_aura = create_spell("Healing Aura", 83, 0, 0, 150,0);
     Spell *healing_light_house = create_spell("Healing Light House", 130, 0, 0, 300,0);
     Spell *heart_of_dragon = create_spell("Heart Of Dragon", 210, 0, 0, 500,0);
 
+    // store the spells in an array
     Spell *can_use[3];
     can_use[0] = healing_aura;
     can_use[1] = healing_light_house;
     can_use[2] = heart_of_dragon;
 
+    // get the current heal spell of the character
     char *heal = get_heal(character);
     printf("Your current heal spell : %s\n", heal);
     printf("\n");
@@ -276,6 +306,7 @@ void select_heal_spell(Character *character) {
     printf("Each heal spell costs 40 gold coins\n\n");
     printf("\x1b[0m");
 
+    // display the available spells for selection
     for (int i = 0; i < 3; i++) {
         printf("%d. %s\n", i + 1, can_use[i]->spell_name);
     }
@@ -292,12 +323,14 @@ void select_heal_spell(Character *character) {
     if (choice >= 1 && choice <= 3) {
         if(character->gold >= 40) {
             if (character->heal_spell == NULL || character->heal_spell->spell_name == NULL) {
+                // set the new heal spell for the character
                 // printf("test ok");
                 character->gold = character->gold - 30;
                 // printf("%s", can_use[choice - 1]->spell_name);
                 set_heal(character, can_use[choice - 1]);
             } else {
                 if (strcmp(can_use[choice - 1]->spell_name, character->heal_spell->spell_name) == 0) {
+                    // change the heal spell if it is different from the current one
                     // printf("test ok");
                     system("clear");
                     printf("%s already has the heal spell %s\n", character->username,can_use[choice - 1]->spell_name);
@@ -315,6 +348,7 @@ void select_heal_spell(Character *character) {
         printf("Invalid choice: %d\n", choice);
     }
 
+    // deallocate memory occupied by the spells
     free(healing_aura->spell_name);
     free(healing_aura);
     free(healing_light_house->spell_name);
@@ -323,6 +357,17 @@ void select_heal_spell(Character *character) {
     free(heart_of_dragon);
 }
 
+/*
+ * the choose_another_spell function presents a menu to the user,
+ * allowing them to choose between selecting an offensive spell, a defensive spell,
+ * or a heal spell for the provided character.
+ * the function displays a menu with options the user to input a choice. based on the input,
+ * the function either cancels the selection or calls the corresponding function to select the desired spell type.
+ * if the user enters an invalid choice, the function displays an error message.
+ *
+ * parameter:
+ * character: a pointer to the character for whom the spell selection is being made
+ */
 void choose_another_spell(Character *character){
     system("clear");
 
