@@ -52,8 +52,167 @@ Character *init_character(char *name) {
     character->inventory->equipped_weapon = NULL;
     character->inventory->equipped_armor = NULL;
 
+    character->inventory->num_armors = 0;
+
+    character->inventory->num_weapons = 0;
+
+    character->inventory->weapons = malloc(MAX_WEAPONS * sizeof(Weapon*));
+    character->inventory->armors = malloc(MAX_ARMORS * sizeof(Armor*));
+
+    for (int i = 0; i < MAX_ARMORS; i++) {
+        character->inventory->armors[i] = NULL;
+    }
+
+    for (int i = 0; i < MAX_WEAPONS; i++) {
+        character->inventory->weapons[i] = NULL;
+    }
+
     // return a pointer to the newly created character
     return character;
+}
+
+void set_equipped_armor(Character *character, Armor *selection) {
+    // free the memory of the previously equipped armor if it exists
+    if (character->inventory->equipped_armor != NULL) {
+        free(character->inventory->equipped_armor->armor_name);
+        free(character->inventory->equipped_armor);
+    }
+
+    // allocate memory for the new equipped armor
+    character->inventory->equipped_armor = (Armor *)malloc(sizeof(Armor));
+
+    // copy the attributes of the provided armor to the character's equipped armor
+    character->inventory->equipped_armor->armor_name = strdup(selection->armor_name);
+    character->inventory->equipped_armor->description = selection->description;
+    character->inventory->equipped_armor->physical_defense = selection->physical_defense;
+    character->inventory->equipped_armor->durability = selection->durability;
+}
+
+void set_equipped_weapon(Character *character, Weapon *selection) {
+    // free memory of the previously equipped weapon if it exists
+    if (character->inventory->equipped_weapon != NULL) {
+        free(character->inventory->equipped_weapon->weapon_name);
+        free(character->inventory->equipped_weapon->description);
+        free(character->inventory->equipped_weapon);
+    }
+
+    // allocate memory for the new equipped weapon
+    character->inventory->equipped_weapon = (Weapon *)malloc(sizeof(Weapon));
+
+    // copy the attributes of the selected weapon to the equipped weapon
+    character->inventory->equipped_weapon->type = strdup(selection->type);
+    character->inventory->equipped_weapon->weapon_name = strdup(selection->weapon_name);
+    character->inventory->equipped_weapon->description = strdup(selection->description);
+    character->inventory->equipped_weapon->physical_damage = selection->physical_damage;
+    character->inventory->equipped_weapon->durability = selection->durability;
+}
+
+void choose_from_inventory(Character *character) {
+
+    int choice;
+    int max_armor_choice = character->inventory->num_armors;
+    int max_weapon_choice = character->inventory->num_weapons;
+
+    printf("\x1b[34m");
+    printf("\nEquip from inventory\n");
+    printf("\x1b[0m");
+
+    printf("1. Armors\n");
+    printf("2. Weapons\n");
+    printf("0. Cancel\n");
+
+    printf("\x1b[32m");
+    printf("\nEnter your choice : ");
+    printf("\x1b[0m");
+
+    scanf("%d", &choice);
+
+    switch (choice) {
+        case 0:
+            system("clear");
+            break;
+        case 1:
+            system("clear");
+
+            printf("\x1b[34m");
+            printf("\nArmors\n");
+            printf("\x1b[0m");
+
+            int found = 0;
+
+            for (int i = 0; i < character->inventory->num_armors; i++) {
+                if (character->inventory->armors[i] != NULL) {
+                    found = 1;
+                    printf("%d. %s\n", i + 1, character->inventory->armors[i]->armor_name);
+                }
+            }
+
+            if (!found) {
+                printf("No armors\n");
+                break;
+            }else{
+                printf("0. Cancel\n");
+            }
+
+            printf("\x1b[32m");
+            printf("\nEnter your choice : ");
+            printf("\x1b[0m");
+
+            scanf("%d", &choice);
+
+            if (choice == 0) {
+                system("clear");
+                break;
+            }
+
+            set_equipped_armor(character, character->inventory->armors[choice - 1]);
+
+            break;
+
+        case 2:
+            system("clear");
+
+            printf("\x1b[34m");
+            printf("\nWeapons\n");
+            printf("\x1b[0m");
+
+            int found_weapon = 0;
+
+            for (int i = 0; i < character->inventory->num_weapons; i++) {
+                if (character->inventory->weapons[i] != NULL) {
+                    found_weapon = 1;
+                    printf("%d. %s\n", i + 1, character->inventory->weapons[i]->weapon_name);
+                }
+            }
+
+            if (!found_weapon) {
+                printf("No weapons\n");
+                break;
+            }else{
+                printf("0. Cancel\n");
+            }
+
+            printf("\x1b[32m");
+            printf("\nEnter your choice : ");
+            printf("\x1b[0m");
+
+            scanf("%d", &choice);
+
+            if (choice == 0) {
+                system("clear");
+                break;
+            }
+
+            set_equipped_weapon(character, character->inventory->weapons[choice - 1]);
+
+            break;
+
+
+        default:
+            printf("You have to choose between 0 and 2!\n");
+            break;
+    }
+
 }
 
 void show_specs(Character *character){
@@ -180,18 +339,60 @@ void show_specs(Character *character){
     printf("\n");
 
     // display the equipped weapon and armor in the character's inventory
-    printf("Weapon : ");
+    printf("Equipped Weapon : ");
     if (character->inventory == NULL || character->inventory->equipped_weapon == NULL) {
-        printf("No weapon\n");
+        printf("No equipped weapon\n");
     } else {
         printf("%s\n", character->inventory->equipped_weapon->weapon_name);
     }
-    printf("Armor : ");
+    printf("Equipped Armor : ");
     if (character->inventory == NULL || character->inventory->equipped_armor == NULL) {
-        printf("No armor\n");
+        printf("No equipped armor\n");
     } else {
         printf("%s\n", character->inventory->equipped_armor->armor_name);
     }
+
+    printf("\n");
+
+    // display armors
+    if (character->inventory->num_armors == 0) {
+        printf("Armors (Capacity : %d):\nNo armors\n", MAX_ARMORS - 1);
+    } else {
+        printf("Armors (Capacity : %d):\n", MAX_ARMORS - 1);
+        int found_armor = 0;
+        for (int i = 0; i < character->inventory->num_armors; i++) {
+            if (character->inventory->armors[i] != NULL) {
+                found_armor = 1;
+                printf("%d. %s\n", i + 1, character->inventory->armors[i]->armor_name);
+            }
+        }
+
+        if (!found_armor) {
+            printf("No armors\n");
+        }
+    }
+
+    printf("\n");
+
+    // display weapons
+    if (character->inventory->num_weapons == 0) {
+        printf("Weapons (Capacity : %d):\nNo weapons\n", MAX_WEAPONS - 1);
+    } else {
+        printf("Weapons (Capacity : %d):\n", MAX_WEAPONS - 1);
+        int found_weapon = 0;
+
+        for (int i = 0; i < character->inventory->num_weapons; i++) {
+            if (character->inventory->weapons[i] != NULL) {
+                found_weapon = 1;
+                printf("%d. %s\n", i + 1, character->inventory->weapons[i]->weapon_name);
+            }
+        }
+
+        if (!found_weapon) {
+            printf("No weapons\n");
+        }
+    }
+
 
     // print a line of X characters for visual separation
     for(int i = 0; i < 60; i++){
@@ -220,22 +421,26 @@ int has_spells(Character *character) {
 }
 
 void set_weapon(Character *character, Weapon *selection) {
-    // free memory of the previously equipped weapon if it exists
-    if (character->inventory->equipped_weapon != NULL) {
-        free(character->inventory->equipped_weapon->weapon_name);
-        free(character->inventory->equipped_weapon->description);
-        free(character->inventory->equipped_weapon);
+    int i;
+    for (i = 0; i < MAX_WEAPONS; i++) {
+        if (character->inventory->weapons[i] == NULL) {
+            character->inventory->weapons[i] = (Weapon *)malloc(sizeof(Weapon));
+            // copy the attributes of the selected weapon to the equipped weapon
+            character->inventory->weapons[i]->type = strdup(selection->type);
+            character->inventory->weapons[i]->weapon_name = strdup(selection->weapon_name);
+            character->inventory->weapons[i]->description = strdup(selection->description);
+            character->inventory->weapons[i]->physical_damage = selection->physical_damage;
+            character->inventory->weapons[i]->durability = selection->durability;
+
+            character->inventory->num_weapons++;
+            break;
+        }
     }
 
-    // allocate memory for the new equipped weapon
-    character->inventory->equipped_weapon = (Weapon *)malloc(sizeof(Weapon));
+    if (i >= MAX_WEAPONS) {
+        printf("\n\n%s has received a %s as a reward, but the inventory is full!\n", character->username, selection->weapon_name);
+    }
 
-    // copy the attributes of the selected weapon to the equipped weapon
-    character->inventory->equipped_weapon->type = strdup(selection->type);
-    character->inventory->equipped_weapon->weapon_name = strdup(selection->weapon_name);
-    character->inventory->equipped_weapon->description = strdup(selection->description);
-    character->inventory->equipped_weapon->physical_damage = selection->physical_damage;
-    character->inventory->equipped_weapon->durability = selection->durability;
 }
 
 void takes_weapon(Character *character, int weapon) {
@@ -253,7 +458,7 @@ void takes_weapon(Character *character, int weapon) {
     // set the character's equipped weapon based on the selected index from the array
     set_weapon(character, can_use[weapon]);
 
-    printf("\n\n%s got a weapon : %s\n", character->username, character->inventory->equipped_weapon->weapon_name);
+    printf("\n\n%s got a weapon : %s\n", character->username, can_use[weapon]->weapon_name);
 
     // free the dynamically allocated memory for each weapon
     free(pan_flute->type);
@@ -397,20 +602,24 @@ void takes_heal_spells(Character *character, int heal) {
 }
 
 void set_armor(Character *character, Armor *selection) {
-    // free the memory of the previously equipped armor if it exists
-    if (character->inventory->equipped_armor != NULL) {
-        free(character->inventory->equipped_armor->armor_name);
-        free(character->inventory->equipped_armor);
+    int i;
+    for (i = 0; i < MAX_ARMORS; i++) {
+        if (character->inventory->armors[i] == NULL) {
+            character->inventory->armors[i] = (Armor *)malloc(sizeof(Armor));
+            // copy the attributes of the selected armor to the equipped armor
+            character->inventory->armors[i]->armor_name = strdup(selection->armor_name);
+            character->inventory->armors[i]->description = strdup(selection->description);
+            character->inventory->armors[i]->physical_defense = selection->physical_defense;
+            character->inventory->armors[i]->durability = selection->durability;
+
+            character->inventory->num_armors++;
+            break;
+        }
     }
 
-    // allocate memory for the new equipped armor
-    character->inventory->equipped_armor = (Armor *)malloc(sizeof(Armor));
-
-    // copy the attributes of the provided armor to the character's equipped armor
-    character->inventory->equipped_armor->armor_name = strdup(selection->armor_name);
-    character->inventory->equipped_armor->description = selection->description;
-    character->inventory->equipped_armor->physical_defense = selection->physical_defense;
-    character->inventory->equipped_armor->durability = selection->durability;
+    if (i >= MAX_ARMORS) {
+        printf("\n\n%s has received a %s as a reward, but the inventory is full!\n", character->username, selection->armor_name);
+    }
 }
 
 void takes_armor(Character *character, int armor) {
@@ -426,7 +635,7 @@ void takes_armor(Character *character, int armor) {
     // set the character's armor based on the selected index from the array
     set_armor(character, can_wear[armor]);
 
-    printf("\n\n%s got an armor : %s\n", character->username, character->inventory->equipped_armor->armor_name);
+    printf("\n\n%s got an armor : %s\n", character->username, can_wear[armor]->armor_name);
 
     // free the memory allocated for the armors
     free(helmet_of_athena->armor_name);
@@ -478,31 +687,25 @@ void check_inventory(Character *character) {
     if (character != NULL && character->offensive_spell != NULL) {
         if (character->offensive_spell->is_used == 0) {
             printf("- %s has a %s as an offensive spell.\n", character->username, character->offensive_spell->spell_name);
-        } else if (character->current_mana <= character->offensive_spell->cost) {
-            printf("Insufficient Mana Points !");
         }
     } else {
-        printf("- %s doesn't have any offensive spell to use!\n", character->username);
+        printf("- %s doesn't have any offensive spell to use !\n", character->username);
     }
 
     if (character != NULL && character->heal_spell != NULL) {
         if (character->heal_spell != NULL && character->heal_spell->is_used == 0) {
             printf("- %s has a %s as a heal spell.\n", character->username, character->heal_spell->spell_name);
-        }else if(character->current_mana <= character->heal_spell->cost) {
-            printf("Insufficient Mana Points !");
         }
     }else{
-        printf("- %s doesn't have any heal spell to use!\n", character->username);
+        printf("- %s doesn't have any heal spell to use !\n", character->username);
     }
 
     if (character != NULL && character->defensive_spell != NULL) {
         if (character->defensive_spell != NULL && character->defensive_spell->is_used == 0) {
             printf("- %s has a %s as a defensive spell.\n", character->username, character->defensive_spell->spell_name);
-        }else if(character->current_mana <= character->defensive_spell->cost) {
-            printf("Insufficient Mana Points !");
         }
     }else{
-        printf("- %s doesn't have any defensive spell to use!\n", character->username);
+        printf("- %s doesn't have any defensive spell to use !\n", character->username);
     }
 
     // check and print the availability of equipped weapon and armor
@@ -510,13 +713,13 @@ void check_inventory(Character *character) {
     if (character->inventory->equipped_weapon != NULL) {
         printf("- %s has a %s as a weapon.\n", character->username, character->inventory->equipped_weapon->weapon_name);
     }else{
-        printf("- %s doesn't have any weapon to use !\n", character->username);
+        printf("- %s doesn't have any equipped weapon to use !\n", character->username);
     }
 
     if (character->inventory->equipped_armor != NULL) {
         printf("- %s has a %s as an armor.\n", character->username, character->inventory->equipped_armor->armor_name);
     }else{
-        printf("- %s doesn't have any armor to use !\n", character->username);
+        printf("- %s doesn't have any equipped armor to use !\n", character->username);
     }
 
     for(int a = 0; a <= 50; a++){
@@ -530,7 +733,7 @@ void check_inventory(Character *character) {
     //    }
 
     // check if the offensive spell is available and ask the user to use it during the attack
-    if(character->offensive_spell != NULL && character->offensive_spell->is_used == 0) {
+    if(character->offensive_spell != NULL && character->offensive_spell->is_used == 0 && character->current_mana >= character->offensive_spell->cost) {
         do {
             printf("\nDo you want to use the offensive spell %s during the attack? (y)es or (n)o: ",
                    character->offensive_spell->spell_name);
@@ -545,7 +748,7 @@ void check_inventory(Character *character) {
     }
 
     // check if the heal spell is available and ask the user to use it during the attack
-    if(character->heal_spell != NULL && character->heal_spell->is_used == 0) {
+    if(character->heal_spell != NULL && character->heal_spell->is_used == 0 && character->current_mana >= character->heal_spell->cost) {
         do {
             printf("\nDo you want to use the heal spell %s during the attack? (y)es or (n)o: ", character->heal_spell->spell_name);
             scanf(" %c", &heal_spell);
@@ -559,7 +762,7 @@ void check_inventory(Character *character) {
     }
 
     // check if the defensive spell is available and ask the user to use it during the attack
-    if(character->defensive_spell != NULL && character->defensive_spell->is_used == 0) {
+    if(character->defensive_spell != NULL && character->defensive_spell->is_used == 0 && character->current_mana >= character->defensive_spell->cost) {
         do {
             printf("\nDo you want to use the defensive spell %s during the attack? (y)es or (n)o: ",
                    character->defensive_spell->spell_name);
@@ -571,6 +774,45 @@ void check_inventory(Character *character) {
         } while (defensive_spell != 'Y' && defensive_spell != 'N');
 
         printf("\n");
+    }
+}
+
+void remove_weapon(Character *character, Weapon *weapon) {
+    int i;
+    int found = 0;
+
+    for (i = 0; i < character->inventory->num_weapons; i++) {
+        if(strcmp(character->inventory->weapons[i]->weapon_name, weapon->weapon_name) == 0 && !found){
+            character->inventory->weapons[i] = NULL;
+            found = 1;
+        }
+    }
+
+    if (character->inventory->equipped_weapon == weapon) {
+        free(character->inventory->equipped_weapon->weapon_name);
+        free(character->inventory->equipped_weapon->description);
+        free(character->inventory->equipped_weapon->type);
+        free(character->inventory->equipped_weapon);
+        character->inventory->equipped_weapon = NULL;
+    }
+}
+
+void remove_armor(Character *character, Armor *armor) {
+    int i;
+    int found = 0;
+
+    for (i = 0; i < character->inventory->num_armors; i++) {
+        if(strcmp(character->inventory->armors[i]->armor_name, armor->armor_name) == 0 && !found){
+            character->inventory->armors[i] = NULL;
+            found = 1;
+        }
+    }
+
+    if (character->inventory->equipped_armor == armor) {
+        free(character->inventory->equipped_armor->armor_name);
+        free(character->inventory->equipped_armor->description);
+        free(character->inventory->equipped_armor);
+        character->inventory->equipped_armor = NULL;
     }
 }
 
@@ -591,7 +833,7 @@ void character_attack(Character *character, Monster *monster) {
             character->inventory->equipped_weapon->durability -= 1;
             // check if the weapon's durability has reached 0, and if so, remove the weapon
             if (character->inventory->equipped_weapon->durability <= 0) {
-                character->inventory->equipped_weapon = NULL;
+                remove_weapon(character, character->inventory->equipped_weapon);
                 printf("%s's weapon has broken!\n", character->username);
             }
         }
@@ -603,7 +845,7 @@ void character_attack(Character *character, Monster *monster) {
             character->inventory->equipped_armor->durability -= 1;
             // check if the armor's durability has reached 0, and if so, remove the armor
             if (character->inventory->equipped_armor->durability <= 0) {
-                character->inventory->equipped_armor = NULL;
+                remove_armor(character, character->inventory->equipped_armor);
                 printf("%s's armor has broken!\n", character->username);
             }
         }
@@ -612,28 +854,32 @@ void character_attack(Character *character, Monster *monster) {
     }
 
     // check if the character has an offensive spell and the user wants to use it
-    if (character->offensive_spell != NULL && offensive_spell == 'Y') {
+    if (character->offensive_spell != NULL && offensive_spell == 'Y' && character->offensive_spell->is_used != 1) {
         damage += character->offensive_spell->offensive;
         character->current_mana -= character->offensive_spell->cost;
         printf("%s uses the offensive spell %s.\n", character->username, character->offensive_spell->spell_name);
         character->offensive_spell->is_used = 1;
+        character->offensive_spell = NULL;
     }
 
+
     // check if the character has a heal spell and the user wants to use it
-    if (character->heal_spell != NULL && heal_spell == 'Y') {
+    if (character->heal_spell != NULL && heal_spell == 'Y' && character->heal_spell->is_used != 1) {
         float heal_amount = character->heal_spell->heal;
         character->current_health += heal_amount;
         character->current_mana -= character->heal_spell->cost;
         printf("%s uses the heal spell %s.\n", character->username, character->heal_spell->spell_name);
         character->heal_spell->is_used = 1;
+        character->heal_spell = NULL;
     }
 
     // check if the character has a defensive spell and the user wants to use it
-    if (character->defensive_spell != NULL && defensive_spell == 'Y') {
+    if (character->defensive_spell != NULL && defensive_spell == 'Y' && character->defensive_spell->is_used != 1) {
         damage += character->defensive_spell->defensive;
         character->current_mana -= character->defensive_spell->cost;
         printf("%s uses the defensive spell %s.\n", character->username, character->defensive_spell->spell_name);
         character->defensive_spell->is_used = 1;
+        character->defensive_spell = NULL;
     }
 
     // reduce the monster's life by the calculated damage
@@ -670,12 +916,14 @@ void has_leveled_up(Character *character){
     exp_needed_to_level_up *= 1.5;
 
     // increase the character's current health and mana by 50%
-    character->current_health += character->current_health * 0.5;
-    character->current_mana += character->current_mana * 0.5;
+    character->current_health += character->current_health * 1.5;
+    character->current_mana += character->current_mana * 1.5;
 
     // increase the maximum health and mana by 50%
     max_health += character->current_health;
     max_mana += character->current_mana;
+    MAX_WEAPONS += 2;
+    MAX_ARMORS += 2;
 
     printf("\n%s has leveled up !\n", character->username);
     printf("%s is level %d !\n", character->username, character->level);
@@ -683,7 +931,7 @@ void has_leveled_up(Character *character){
 
 void gain_exp(Character *character){
     // define a ratio for the experience gain
-    float ratio = 0.5;
+    float ratio = 1.5;
 
     // increase the character's experience by 25 times the defined ratio
     character->exp += 25 * ratio;
@@ -782,4 +1030,3 @@ void fight(Character *character, Monster **list_monsters, int num_monsters) {
         printf("\x1b[0m");
     }
 }
-

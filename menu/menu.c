@@ -131,7 +131,7 @@ void display_menu() {
 
         printf("0. Show Stats\n");
         printf("1. Fight\n");
-        printf("2. Choose spells\n");
+        printf("2. Equip from inventory\n");
         printf("3. Check Map\n");
         printf("4. Exit the game\n");
         printf("\n");
@@ -176,7 +176,7 @@ void display_menu() {
             case 2:
                 system("clear");
                 // choose spells
-                choose_another_spell(character);
+                choose_from_inventory(character);
                 break;
 
             case 3:
