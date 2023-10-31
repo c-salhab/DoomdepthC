@@ -1,22 +1,57 @@
+#include <sqlite3.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <sqlite3.h> // library sqlite3
 
+
+int callback(void *, int, char **, char **);
 
 
 int main(void) {
 
     sqlite3 *db;
-    char *zErrMsg = 0;
-    int rc;
+    char *err_msg = 0;
 
-    rc = sqlite3_open("test.db", &db);
+    int rc = sqlite3_open("testt.db", &db);
 
-    if( rc ) {
-        fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
-        return(0);
-    } else {
-        fprintf(stderr, "Opened database successfully\n");
+    if (rc != SQLITE_OK) {
+
+        fprintf(stderr, "Cannot open database: %s\n",
+                sqlite3_errmsg(db));
+        sqlite3_close(db);
+
+        return 1;
     }
+
+    char *sql = "SELECT * FROM player";
+
+    rc = sqlite3_exec(db, sql, callback, 0, &err_msg);
+
+    if (rc != SQLITE_OK ) {
+
+        fprintf(stderr, "Failed to select data\n");
+        fprintf(stderr, "SQL error: %s\n", err_msg);
+
+        sqlite3_free(err_msg);
+        sqlite3_close(db);
+
+        return 1;
+    }
+
     sqlite3_close(db);
+
+    return 0;
+}
+
+int callback(void *NotUsed, int argc, char **argv,
+             char **azColName) {
+
+    NotUsed = 0;
+    printf("File : ");
+    for (int i = 0; i < argc; i++) {
+
+        printf("%s ", argv[i] ? argv[i] : "NULL");
+    }
+
+    printf("\n");
+
+    return 0;
 }

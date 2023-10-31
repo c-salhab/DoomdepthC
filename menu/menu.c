@@ -14,6 +14,7 @@ Projet DoomdepthC
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <sqlite3.h>
 
 int get_list_size(Monster **list_monsters) {
     // initialize size to keep track of the size of the list
@@ -50,6 +51,7 @@ void init_game() {
         printf("\nMenu\n");
         printf("\x1b[0m");
 
+        printf("2. Load a save\n");
         printf("1. Start the game\n");
         printf("0. Exit\n");
 
@@ -66,6 +68,11 @@ void init_game() {
 
         // switch statement to handle different menu options
         switch (choice) {
+
+            case 2:
+                system("clear");
+                load_save();
+                break;
 
             case 1:
                 system("clear");
@@ -214,4 +221,35 @@ void display_menu() {
 
     }
 
+}
+
+int load_save() {
+
+    sqlite3 *db;
+    sqlite3_stmt *res;
+    int error = 0;
+
+    error = sqlite3_open("testt.db", &db);
+    if (error) {
+        fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+        return (1);
+    }
+
+    const char *sql_query = "SELECT * FROM player";
+
+    error = sqlite3_prepare_v2(db, sql_query, -1, &res, 0);
+    if (error != SQLITE_OK) {
+        fprintf(stderr, "Failed to fetch data: %s\n", sqlite3_errmsg(db));
+        return (1);
+    }
+
+    while (sqlite3_step(res) == SQLITE_ROW) {
+
+        printf("%s | %s %s\n", sqlite3_column_text(res, 0), sqlite3_column_text(res, 1), sqlite3_column_text(res, 2));
+    }
+
+    sqlite3_finalize(res);
+    sqlite3_close(db);
+
+    return 0;
 }

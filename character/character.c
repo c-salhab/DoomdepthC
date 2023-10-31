@@ -969,35 +969,10 @@ void fight(Character *character, Monster **list_monsters, int num_monsters) {
     // loop through each round of the fight
     while (character->is_alive && i < num_monsters) {
 
-<<<<<<< HEAD
-
-   /*if(boolean == 1){
-        show_gear();
-    }else{
-        takes_gear();
-    }*/
-
-//    if(boolean == 1){
-//        //show_gear();
-//    }else{
-//        //takes_gear();
-//    }
 
 
     int round = 1;
-=======
-        printf("\n");
-        printf("[ROUND : %d]\n", round);
 
-        round++;
-
-        // determine whether it is the character's or monster's turn to attack
-        if (round % 2 == 0) {
-            character_attack(character, list_monsters[i]);
-        } else {
-            monster_attack(character, list_monsters[i]);
-        }
->>>>>>> 28909cf974be88331b50e9b787fb2aa4ff04bba5
 
         // check if the monster has been defeated
         if (list_monsters[i]->life <= 0) {
