@@ -4,5 +4,8 @@ Date : 27/09/2023
 Projet DoomdepthC
 */
 
+#include "monsters.h"
+
 void display_menu();
 void init_game();
+int get_list_size(Monster **list_monsters);
