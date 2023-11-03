@@ -33,7 +33,7 @@ int exp_needed_to_level_up = 50;
 int max_health = 1000;
 int max_mana = 1000;
 
-Character *init_character(char *name);
+Character *init_character(char *name, float current_health, float current_mana, int level, int exp, int gold);
 
 void show_specs(Character *character);
 

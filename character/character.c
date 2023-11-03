@@ -19,26 +19,28 @@ char offensive_spell = '\0'; // represents an offensive spell
 char defensive_spell = '\0'; // represents a defensive spell
 char heal_spell = '\0'; // represents a healing spell
 
-Character *init_character(char *name) {
+
+
+Character *init_character(char *name, float current_health, float current_mana, int level, int exp, int gold) {
     // allocate memory for a new character
     Character *character = malloc(sizeof(Character));
     // set the username of the character to the provided name
-    character->username = name;
+    character->username = strdup(name);
 
     // set the character as alive
     character->is_alive = 1;
     // set the current health to the maximum health
-    character->current_health = max_health;
+    character->current_health = current_health;
     // set the current mana to the maximum mana
-    character->current_mana = max_mana;
+    character->current_mana = current_mana;
 
     // set the level to 1
-    character->level = 1;
+    character->level = level;
     // set the initial experience points to 0
-    character->exp = 0;
+    character->exp = exp;
 
     // set the initial gold amount to 0
-    character->gold = 0;
+    character->gold = gold;
     // initialize the offensive spell as null
     character->offensive_spell = NULL;
     // initialize the defensive spell as null

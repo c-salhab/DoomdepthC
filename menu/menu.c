@@ -8,6 +8,7 @@ Projet DoomdepthC
 #include "../headers/monsters.h"
 #include "../headers/character.h"
 #include "../headers/spells.h"
+#include "../Save/save.c"
 #include "../character/character.c"
 #include "../monsters/monsters.c"
 #include "../spells/spells.c"
@@ -71,7 +72,13 @@ void init_game() {
 
             case 2:
                 system("clear");
-                load_save();
+                printf("Select a save file : \n");
+                display_save();
+
+                int selectedSave;
+                scanf("%d", &selectedSave);
+                load_save(selectedSave);
+
                 break;
 
             case 1:
@@ -127,7 +134,7 @@ void display_menu() {
     printf("Hello, %s ! Welcome to Doomdepth !\n", name);
 
     // initialize a character structure using the entered name
-    Character *character = init_character(name);
+    Character *character = init_character(name, 1000, 1000, 1, 0, 0);
 
     // infinite loop for displaying the menu and handling user choices
     while (1) {
@@ -140,7 +147,8 @@ void display_menu() {
         printf("1. Fight\n");
         printf("2. Equip from inventory\n");
         printf("3. Check Map\n");
-        printf("4. Exit the game\n");
+        printf("4. Save\n");
+        printf("5. Exit the game\n");
         printf("\n");
 
         int choice;
@@ -193,6 +201,11 @@ void display_menu() {
 
             case 4:
                 system("clear");
+                save_file(character);
+                break;
+
+            case 5:
+                system("clear");
                 // exit the program
                 printf("Are you sure ? (y)es or (n)o : ");
                 char decision;
@@ -223,7 +236,7 @@ void display_menu() {
 
 }
 
-int load_save() {
+int display_save() {
 
     sqlite3 *db;
     sqlite3_stmt *res;
@@ -252,4 +265,153 @@ int load_save() {
     sqlite3_close(db);
 
     return 0;
+}
+
+
+int load_save(int selectedSave) {
+
+    sqlite3 *db;
+    sqlite3_stmt *res;
+    int rc = 0;
+
+    rc = sqlite3_open("testt.db", &db);
+    if (rc) {
+        fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+        return (1);
+    }
+
+    char *sql_query = "SELECT * FROM player WHERE  Id=?";
+
+
+
+    rc = sqlite3_prepare_v2(db, sql_query, -1, &res, 0);
+    if (rc != SQLITE_OK) {
+        fprintf(stderr, "Failed to fetch data: %s\n", sqlite3_errmsg(db));
+        return (1);
+    }
+
+
+
+    rc = sqlite3_bind_int(res, 1, selectedSave);
+
+    sqlite3_step(res);
+
+    const unsigned char *name = sqlite3_column_text(res, 1);
+
+    Character *character = init_character((char *)name, sqlite3_column_int(res, 6), sqlite3_column_int(res, 7), sqlite3_column_int(res, 4), sqlite3_column_int(res, 5), sqlite3_column_int(res, 8));
+
+
+
+    sqlite3_finalize(res);
+    sqlite3_close(db);
+
+
+
+
+
+    // display the main menu and handle user choices
+    // clear console screen
+    system("clear");
+
+
+
+
+    // infinite loop for displaying the menu and handling user choices
+    while (1) {
+
+        printf("\x1b[34m");
+        printf("\nMenu\n");
+        printf("\x1b[0m");
+
+        printf("0. Show Stats\n");
+        printf("1. Fight\n");
+        printf("2. Equip from inventory\n");
+        printf("3. Check Map\n");
+        printf("4. Save\n");
+        printf("5. Exit the game\n");
+        printf("\n");
+
+        int choice;
+
+        printf("\x1b[32m");
+        printf("Enter your choice : ");
+        printf("\x1b[0m");
+
+        scanf("%d", &choice);
+
+        // switch statement to handle different menu options
+        switch (choice) {
+
+            case 0:
+                // show the character's statistics
+                system("clear");
+                show_specs(character);
+                break;
+
+            case 1:
+                // generate and scale monsters then start the fight
+                system("clear");
+                Monster **monsters = generate_monster();
+                int size = get_list_size(monsters);
+
+                scale_monster_stats(monsters, size, character->level);
+
+                if(monsters){
+                    // printf("%d", size);
+                    fight(character, monsters, size);
+                }
+
+                for (int i = 0; i < size; i++) {
+                    free(monsters[i]);
+                }
+                free(monsters);
+
+                break;
+
+            case 2:
+                system("clear");
+                // choose spells
+                choose_from_inventory(character);
+                break;
+
+            case 3:
+                system("clear");
+                // check map
+                break;
+
+            case 4:
+                system("clear");
+                save_file(character);
+                break;
+
+            case 5:
+                system("clear");
+                // exit the program
+                printf("Are you sure ? (y)es or (n)o : ");
+                char decision;
+                scanf(" %c", &decision);
+
+                decision = toupper(decision);
+
+                if (decision == 'Y') {
+                    system("clear");
+                    printf("\nGoodbye !\n");
+                    exit(0);
+                } else if (decision == 'N') {
+                    system("clear");
+                } else {
+                    system("clear");
+                    printf("You have to choose between yes (Y) or no (N) !\n");
+                }
+                break;
+
+            default:
+                system("clear");
+                printf("\nChoose between 0 and 4 !\n");
+
+
+        }
+
+    }
+
 }

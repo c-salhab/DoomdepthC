@@ -1,57 +1,45 @@
-#include <sqlite3.h>
+
 #include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <sqlite3.h>
 
 
-int callback(void *, int, char **, char **);
 
-
-int main(void) {
-
+int save_file(Character *character) {
     sqlite3 *db;
-    char *err_msg = 0;
+    sqlite3_stmt *res;
+    int error = 0;
 
-    int rc = sqlite3_open("testt.db", &db);
-
-    if (rc != SQLITE_OK) {
-
-        fprintf(stderr, "Cannot open database: %s\n",
-                sqlite3_errmsg(db));
-        sqlite3_close(db);
-
-        return 1;
+    error = sqlite3_open("testt.db", &db);
+    if (error) {
+        fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+        return (1);
     }
 
-    char *sql = "SELECT * FROM player";
+    const char *sql_query = "INSERT INTO player (name, posX, posY, level, xp, pv, mana, gold) VALUES (?, 0, 0, ?, ?, ?, ?, ?)";
 
-    rc = sqlite3_exec(db, sql, callback, 0, &err_msg);
-
-    if (rc != SQLITE_OK ) {
-
-        fprintf(stderr, "Failed to select data\n");
-        fprintf(stderr, "SQL error: %s\n", err_msg);
-
-        sqlite3_free(err_msg);
-        sqlite3_close(db);
-
-        return 1;
+    error = sqlite3_prepare_v2(db, sql_query, -1, &res, 0);
+    if (error != SQLITE_OK) {
+        fprintf(stderr, "Failed to fetch data: %s\n", sqlite3_errmsg(db));
+        return (1);
     }
 
+
+
+    sqlite3_bind_text(res, 1, character->username, -1, SQLITE_STATIC);
+    sqlite3_bind_int(res, 2, character->level);
+    sqlite3_bind_int(res, 3, character->exp);
+    sqlite3_bind_int(res, 4, character->current_health);
+    sqlite3_bind_int(res, 5, character->current_mana);
+    sqlite3_bind_int(res, 6, character->gold);
+
+    sqlite3_step(res);
+
+
+    sqlite3_finalize(res);
     sqlite3_close(db);
 
     return 0;
-}
 
-int callback(void *NotUsed, int argc, char **argv,
-             char **azColName) {
-
-    NotUsed = 0;
-    printf("File : ");
-    for (int i = 0; i < argc; i++) {
-
-        printf("%s ", argv[i] ? argv[i] : "NULL");
-    }
-
-    printf("\n");
-
-    return 0;
 }
