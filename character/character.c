@@ -19,28 +19,31 @@ char offensive_spell = '\0'; // represents an offensive spell
 char defensive_spell = '\0'; // represents a defensive spell
 char heal_spell = '\0'; // represents a healing spell
 
-Character *init_character(char *name) {
+Character *init_character(char *name, float current_health, float current_mana, int level, int exp, int gold) {
     // allocate memory for a new character
     Character *character = malloc(sizeof(Character));
     // set the username of the character to the provided name
-    character->username = name;
+    character->username = strdup(name);
 
+    // set the character as alive
+    character->is_alive = 1;
     // set the current health to the maximum health
-    character->current_health = 100;
+    character->current_health = current_health;
     // set the current mana to the maximum mana
-    character->current_mana = 100;
+    character->current_mana = current_mana;
 
     // set the level to 1
-    character->level = 1;
+    character->level = level;
     // set the initial experience points to 0
-    character->exp = 0;
+    character->exp = exp;
 
     // set the initial gold amount to 0
-    character->gold = 0;
+    character->gold = gold;
     // initialize the offensive spell as null
-
     character->offensive_spell = NULL;
-    // initialize the heal spell as null
+    // initialize the defensive spell as null
+    character->defensive_spell = NULL;
+    // initialize the healing spell as null
     character->heal_spell = NULL;
 
     // allocate memory for the character's inventory
@@ -52,8 +55,7 @@ Character *init_character(char *name) {
     character->inventory->num_armors = 0;
 
     character->inventory->num_weapons = 0;
-    MAX_ARMORS = 10;
-    MAX_WEAPONS = 10;
+
     character->inventory->weapons = malloc(MAX_WEAPONS * sizeof(Weapon*));
     character->inventory->armors = malloc(MAX_ARMORS * sizeof(Armor*));
 
@@ -68,6 +70,7 @@ Character *init_character(char *name) {
     // return a pointer to the newly created character
     return character;
 }
+
 
 void set_equipped_armor(Character *character, Armor *selection) {
     // free the memory of the previously equipped armor if it exists
