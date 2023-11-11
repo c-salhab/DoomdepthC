@@ -1,8 +1,9 @@
 #include "../character/character.c"
 #include "../monsters/monsters.c"
 #include "../spells/spells.c"
+#include <unistd.h>
 
-#include <windows.h>
+//#include <windows.h>
 
 
 void character_attack(Character *character, Monster *monster) {
@@ -41,7 +42,7 @@ void character_attack(Character *character, Monster *monster) {
     for(int j = 0; j < 50; j++){
         printf("-");
     }
-    Sleep(1500);
+    sleep(1);
 }
 
 
@@ -144,7 +145,7 @@ void player_turn(Character *player, Monster**wave, int wave_size)
         {
             input=10;
             while(input != 0 && action_points !=0 && wave_is_alive(wave,wave_size)==1)
-            {   system("cls");
+            {   system("clear");
                 print_wave_monsters(wave,wave_size);
                 printf("========================================== \n\n");
                 printf("%d PV || %d MANA || %d Action points\n\n",player->current_health, player->current_mana, action_points);
@@ -169,7 +170,7 @@ void player_turn(Character *player, Monster**wave, int wave_size)
                 wave[i]->life=0;
             }
         }
-        system("cls");
+        system("clear");
 
 
     }
@@ -182,15 +183,15 @@ void monsters_turn(Character*player, Monster**wave, int wave_size)
         if(monster_is_alive(wave[i]))
         {
             monster_attack(player,wave[i]);
-            Sleep(800);
+            sleep(1);
         }
     }
-    Sleep(1000);
+    sleep(1);
 }
 
 void wave_battle(Character*player, int distance, char *filename)
 {
-    system("cls");
+    system("clear");
     int wave_size = 3;
     Monster**wave =generate_wave_monsters(filename, distance, distance+3, wave_size);
 
@@ -199,21 +200,21 @@ void wave_battle(Character*player, int distance, char *filename)
         player_turn(player,wave,wave_size);
         monsters_turn(player,wave,wave_size);
     }
-    system("cls");
+    system("clear");
     printf("Wave finished!\n");
-    Sleep(1500);
+    sleep(1);
 }
 
 
 void battle_phase(Character *player, int number_of_waves, int distance, char *filename)
 {
-    system("cls");
+    system("clear");
     printf("Battle phase !\n\n");
     int n=1;
     while (player_is_alive(player) && n <= number_of_waves)
     {
         printf("------------ WAVE %d/%d ------------",n,number_of_waves);
-        Sleep(1500);
+        sleep(1);
         wave_battle(player,distance,filename);
         n+=1;
     }

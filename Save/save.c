@@ -11,6 +11,7 @@ int save_file(Character *character) {
     sqlite3 *db;
     sqlite3_stmt *res;
     int error = 0;
+    int rc;
 
     error = sqlite3_open("testt.db", &db);
     if (error) {

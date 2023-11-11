@@ -9,7 +9,7 @@ Projet DoomdepthC
 #include "../headers/character.h"
 #include "../headers/spells.h"
 // #include "../headers/map.h"
-#include "../character/character.c"
+
 #include "../Save/save.c"
 
 #include "../map/map.c"
@@ -316,8 +316,12 @@ int load_save(int selectedSave) {
         const unsigned char *weapon_name = sqlite3_column_text(res, 1);
         const unsigned char *description = sqlite3_column_text(res, 2);
 
-        Weapon * wep = create_weapon("Physical", (char *)weapon_name, (char *)description, sqlite3_column_int(res, 3), sqlite3_column_int(res, 4));
-        set_weapon(character,wep);
+        Weapon * wep = create_weapon(0, "Physical", (char *)weapon_name, (char *)description, sqlite3_column_int(res, 3), sqlite3_column_int(res, 4), 1);
+
+       // set_weapon(character,wep);
+
+        character->inventory->weapons[character->inventory->num_weapons] = wep;
+        character->inventory->num_weapons+=1;
     }
 
 
@@ -341,7 +345,10 @@ int load_save(int selectedSave) {
         const unsigned char *description = sqlite3_column_text(res, 2);
 
         Armor * arm = create_armor((char *)armor_name, (char *)description, sqlite3_column_int(res, 3), sqlite3_column_int(res, 4));
-        set_armor(character,arm);
+        //set_armor(character,arm);
+
+        character->inventory->armors[character->inventory->num_armors] = arm;
+        character->inventory->num_armors+=1;
     }
 
 
@@ -357,6 +364,8 @@ int load_save(int selectedSave) {
     // clear console screen
     system("clear");
 
+    // initialize the map
+    Map*map=init_new_map();
 
 
 
@@ -367,10 +376,9 @@ int load_save(int selectedSave) {
         printf("\nMenu\n");
         printf("\x1b[0m");
 
-        printf("0. Show Stats\n");
-        printf("1. Fight\n");
-        printf("2. Equip from inventory\n");
-        printf("3. Check Map\n");
+        printf("1. Map\n");
+        printf("2. Inventory\n");
+        printf("3. Show Stats\n");
         printf("4. Save\n");
         printf("5. Exit the game\n");
         printf("\n");
@@ -386,31 +394,14 @@ int load_save(int selectedSave) {
         // switch statement to handle different menu options
         switch (choice) {
 
-            case 0:
-                // show the character's statistics
-                system("clear");
-                show_specs(character);
-                break;
-
             case 1:
-                // generate and scale monsters then start the fight
+
                 system("clear");
-                Monster **monsters = generate_monster();
-                int size = get_list_size(monsters);
+                // check map
 
-                scale_monster_stats(monsters, size, character->level);
-
-                if(monsters){
-                    // printf("%d", size);
-                    fight(character, monsters, size);
-                }
-
-                for (int i = 0; i < size; i++) {
-                    free(monsters[i]);
-                }
-                free(monsters);
-
+                map_phase(map,character);
                 break;
+
 
             case 2:
                 system("clear");
@@ -419,8 +410,9 @@ int load_save(int selectedSave) {
                 break;
 
             case 3:
+                // show the character's statistics
                 system("clear");
-                // check map
+                show_specs(character);
                 break;
 
             case 4:

@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
-
+#include <unistd.h>
 #include "../headers/map.h"
 #include "../battle/battle.c"
 
@@ -93,6 +93,8 @@ void print_map(int** map, int size)
     }
 }
 
+
+//flag
 int**map_generation(int size)
 {
     int**game_map = malloc(sizeof(int*)*size);
@@ -100,11 +102,11 @@ int**map_generation(int size)
     {
         game_map[i] = malloc(sizeof(int)*size);
     }
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) 
-            {
-                game_map[i][j] = -1;
-            }
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++)
+        {
+            game_map[i][j] = -1;
+        }
     }
 
     return game_map;
@@ -367,17 +369,17 @@ void loot(Map*map, Character*player)
         int random_gold = (rand()%((distance+1)*10));
         player->gold += random_gold;
         printf("You found %d gold coins !",random_gold);
-        Sleep(1500);
+        sleep(1);
     }
     if(r==1)
     {
         int random_id = (rand() % 3) + distance;
         Weapon*random_weapon=weapon_from_csv(random_id);
         printf("You found a %s!\n\n", random_weapon->weapon_name);
-        Sleep(700);
+        sleep(1);
         weapon_stat(random_weapon);
         printf("\nDo you want to take it ?\n");
-        Sleep(700);
+        sleep(1);
         printf("1. Yes\n2. No\n\n");
 
         int input;
@@ -394,7 +396,7 @@ void loot(Map*map, Character*player)
         }
 
 
-        Sleep(1500);
+        sleep(1);
     }
 }
 
@@ -404,7 +406,7 @@ void map_phase(Map*map, Character*player)
     char input = ' ';
     while(input != 'p'&& player_is_alive(player)==1)
     {
-        system("cls");
+        system("clear");
         new_squares(map);
         print_game_map(map);
         display_move();
