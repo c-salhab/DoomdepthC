@@ -1,0 +1,21 @@
+0,Normal,Sword,"""Sword that can cut butter""",5,5,1
+1,Normal,Bow,"""Bow that shoot arrows""",5,5,1
+2,Normal,Axe,"""FOR BIG CUT""",5,5,1
+3,Normal,Spear,"""If you like pointy thing""",8,8,2
+4,Normal,Hammer,"""Just smash""",10,10,3
+5,Normal,Bouftou Hammer,"""It's a Hammer but with bouftou""",10,10,3
+6,Normal,Tofu Eater,"""It's a simple fork""",10,10,3
+7,Normal,Fire sword,"""Sword with fire""",15,15,4
+8,Normal,Magic Bow,"""It's magical so it's better""",15,15,4
+9,Normal,Try hard,"""For me""",20,20,5
+10,Normal,Weapon,"""It's actually a weapon""",20,20,5
+11,Normal,SOUL EATER,"""For eating soul""",20,20,5
+12,Normal,Rasengan,"""The signature Luffy attack""",25,25,6
+13,Normal,No idea,"""No idea""",25,25,6
+14,Normal,Destroyer of world,"""Destroyer of world""",25,25,6
+15,Normal,Terra blade,"""Blade create with MAGIC""",30,30,7
+16,Normal,Axe of Chaos,"""Chaos Axe is Axe chaos""",30,30,7
+17,Normal,Calypso wand,"""I don't know""",30,30,7
+18,Normal,Hyperdrive,"""The best drive""",35,35,8
+19,Normal,Olivier,"""My bestt friend""",40,40,9
+20,Normal,Chabel,"""My other best friend""",40,40,9
