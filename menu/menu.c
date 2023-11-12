@@ -8,7 +8,7 @@ Projet DoomdepthC
 #include "../headers/monsters.h"
 #include "../headers/character.h"
 #include "../headers/spells.h"
-// #include "../headers/map.h"
+//#include "../headers/map.h"
 
 #include "../Save/save.c"
 
@@ -18,6 +18,12 @@ Projet DoomdepthC
 #include <stdlib.h>
 #include <ctype.h>
 #include <sqlite3.h>
+#include <string.h>
+
+
+#define FILENAME_PREFIX "csv_files/maps/save_"
+#define FILENAME_SUFFIX ".csv"
+
 
 // int get_list_size(Monster **list_monsters) {
 //     // initialize size to keep track of the size of the list
@@ -193,7 +199,7 @@ void display_menu() {
 
             case 4:
                 system("clear");
-                save_file(character);
+                save_file(character, map->game_map, map->posX, map->posY);
                 break;
 
             case 5:
@@ -365,7 +371,12 @@ int load_save(int selectedSave) {
     system("clear");
 
     // initialize the map
-    Map*map=init_new_map();
+
+    char fileName[40];
+    sprintf(fileName, "%s%02d%s", FILENAME_PREFIX, selectedSave, FILENAME_SUFFIX);
+
+
+    Map*map=init_custom_map(0, 0, fileName);
 
 
 

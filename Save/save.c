@@ -6,7 +6,41 @@
 
 
 
-int save_file(Character *character) {
+
+
+
+#define FILENAME_PREFIX "csv_files/maps/save_"
+#define FILENAME_SUFFIX ".csv"
+
+void saveMapToCSV(const char *filename, int **matrix, int rows, int cols) {
+    FILE *file = fopen(filename, "w");
+    if (file == NULL) {
+        perror("Error opening file");
+        exit(EXIT_FAILURE);
+    }
+
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            fprintf(file, "%d", matrix[i][j]);
+
+            // Add a comma if it's not the last column
+            if (j < cols - 1) {
+                fprintf(file, ",");
+            }
+        }
+
+        // Add a newline if it's not the last row
+        if (i < rows - 1) {
+            fprintf(file, "\n");
+        }
+    }
+
+    fclose(file);
+}
+
+
+
+int save_file(Character *character, int ** matrix, int posX, int posY) {
 
     sqlite3 *db;
     sqlite3_stmt *res;
@@ -19,7 +53,7 @@ int save_file(Character *character) {
         return (1);
     }
 
-    const char *sql_query = "INSERT INTO player (name, posX, posY, level, xp, pv, mana, gold) VALUES (?, 0, 0, ?, ?, ?, ?, ?)";
+    const char *sql_query = "INSERT INTO player (name, posX, posY, level, xp, pv, mana, gold) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
     error = sqlite3_prepare_v2(db, sql_query, -1, &res, 0);
     if (error != SQLITE_OK) {
@@ -30,11 +64,13 @@ int save_file(Character *character) {
 
 
     sqlite3_bind_text(res, 1, character->username, -1, SQLITE_STATIC);
-    sqlite3_bind_int(res, 2, character->level);
-    sqlite3_bind_int(res, 3, character->exp);
-    sqlite3_bind_int(res, 4, character->current_health);
-    sqlite3_bind_int(res, 5, character->current_mana);
-    sqlite3_bind_int(res, 6, character->gold);
+    sqlite3_bind_int(res, 2, posX);
+    sqlite3_bind_int(res, 3, posY);
+    sqlite3_bind_int(res, 4, character->level);
+    sqlite3_bind_int(res, 5, character->exp);
+    sqlite3_bind_int(res, 6, character->current_health);
+    sqlite3_bind_int(res, 7, character->current_mana);
+    sqlite3_bind_int(res, 8, character->gold);
 
     error = sqlite3_step(res);
     if (error != SQLITE_DONE) {
@@ -44,7 +80,7 @@ int save_file(Character *character) {
 
 
 
-
+    //get save ID
     sql_query = "SELECT * FROM player ORDER BY Id DESC LIMIT 1";
 
 
@@ -120,8 +156,12 @@ int save_file(Character *character) {
         }
     }
 
+    //save map
+    char fileName[40];
+    sprintf(fileName, "%s%02d%s", FILENAME_PREFIX, idplayer, FILENAME_SUFFIX);
 
 
+    saveMapToCSV(fileName, matrix, 20 ,20);
 
     sqlite3_finalize(res);
     sqlite3_close(db);
@@ -129,3 +169,4 @@ int save_file(Character *character) {
     return 0;
 
 }
+

@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include "../headers/map.h"
 #include "../battle/battle.c"
-
+#include <string.h>
 
 Map *init_map(int posX, int posY, int size, int**game_map, int posX_shop, int posY_shop, int posX_last_fight, int posY_last_fight)
 {
@@ -38,6 +38,62 @@ Map *init_new_map()
     // printf("X=%d Y=%d ",map->posX_shop,map->posY_shop);
     return map;
 }
+
+
+
+
+
+
+// Function to read a matrix from a CSV file
+int** readMapFromCSV(const char *filename, int rows, int cols) {
+    FILE *file = fopen(filename, "r");
+    if (file == NULL) {
+        perror("Error opening file");
+        exit(EXIT_FAILURE);
+    }
+
+    // Allocate memory for the matrix
+    int **matrix = (int **)malloc(rows * sizeof(int *));
+    for (int i = 0; i < rows; i++) {
+        matrix[i] = (int *)malloc(cols * sizeof(int));
+    }
+
+    char line[400];
+    for (int i = 0; i < rows; i++) {
+        if (fgets(line, sizeof(line), file) == NULL) {
+            perror("Error reading line");
+            exit(EXIT_FAILURE);
+        }
+
+        char *token = strtok(line, ",");
+        for (int j = 0; j < cols; j++) {
+            matrix[i][j] = atoi(token);
+            token = strtok(NULL, ",");
+        }
+    }
+
+    fclose(file);
+    return matrix;
+}
+
+
+
+Map *init_custom_map(int posX, int posY, char *filename)
+{
+
+    int ** game_map=readMapFromCSV(filename, 20, 20);
+    int size = 20;
+
+    int posX_shop = 0;
+    int posY_shop = 0;
+
+
+
+    Map*map = init_map(posX,posY,size,game_map,posX_shop,posY_shop,0,0);
+    // printf("X=%d Y=%d ",map->posX_shop,map->posY_shop);
+    return map;
+}
+
 
 
 void print_game_map(Map *map) 
