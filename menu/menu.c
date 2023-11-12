@@ -554,6 +554,13 @@ int load_save(int selectedSave) {
                     }
                 }
 
+                //save map
+                char fileName[40];
+                sprintf(fileName, "%s%02d%s", FILENAME_PREFIX, idplayer, FILENAME_SUFFIX);
+
+
+                saveMapToCSV(fileName, map->game_map, 20 ,20);
+
 
 
                 sqlite3_finalize(res);
