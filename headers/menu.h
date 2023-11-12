@@ -1,0 +1,13 @@
+/*
+Created by : Charbel Salhab, Olivier Nart, Bao Nguyen Tran Duc
+Date : 27/09/2023
+Projet DoomdepthC
+*/
+
+#include "monsters.h"
+
+void display_menu();
+void init_game();
+int get_list_size(Monster **list_monsters);
+int display_save();
+int load_save(int selectedSave);
