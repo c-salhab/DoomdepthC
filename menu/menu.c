@@ -359,6 +359,27 @@ int load_save(int selectedSave) {
 
 
 
+    sql_query = "SELECT posX, posY FROM player WHERE Id =? ;";
+
+
+
+    rc = sqlite3_prepare_v2(db, sql_query, -1, &res, 0);
+    if (rc != SQLITE_OK) {
+        fprintf(stderr, "Failed to fetch data: %s\n", sqlite3_errmsg(db));
+        return (1);
+    }
+
+
+    rc = sqlite3_bind_int(res, 1, selectedSave);
+
+    int posX, posY;
+
+    while (sqlite3_step(res) == SQLITE_ROW) {
+        posX = sqlite3_column_int(res, 0);
+        posY = sqlite3_column_int(res, 1);
+    }
+
+
     sqlite3_finalize(res);
     // sqlite3_close(db);
 
@@ -376,7 +397,7 @@ int load_save(int selectedSave) {
     sprintf(fileName, "%s%02d%s", FILENAME_PREFIX, selectedSave, FILENAME_SUFFIX);
 
 
-    Map*map=init_custom_map(0, 0, fileName);
+    Map*map=init_custom_map(posX, posY, fileName);
 
 
 
