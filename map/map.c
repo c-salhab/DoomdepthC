@@ -250,43 +250,25 @@ void forced_battle(Map*map, int X, int Y)
     map->game_map[X][Y] = 2;
 }
 
+
 void possilbe_squares(Map*map, int X, int Y, int random, int arr[], int *array_size)
 {
-    // printf(" random=%d\n",random);
+    if(random==0)
+    {
+        remove_element(arr,array_size,0);
+    }
+
+    if(random==3)
+    {
+        remove_element(arr,array_size,3);
+    }
+
     if(random==4)
     {
         map->posX_shop = X;
         map->posY_shop = Y;
-        printf("\nmap[X][Y]=%d",map->posX_shop,map->posY_shop);
         remove_element(arr,array_size,4);
     }
-    if(random==0)
-    {
-        map->posX_shop = X;
-        map->posY_shop = Y;
-        // printf("\nshopX=%d shopY=posY\n",map->posX_shop,map->posY_shop);
-        remove_element(arr,array_size,0);
-    }
-    // if(map->posX-1>=0)
-    // {
-    //     if(map->game_map[map->posX-1][map->posY]==0)
-    //     {
-    //         remove_element(arr,array_size,0);
-    //     }  
-    // }
-
-    // if(map->posY+1<map->size)
-    // {
-    //     if(map->game_map[map->posX][map->posY+1]==0)
-    //     {
-    //         remove_element(arr,array_size,0);
-    //     }
-    // }
-
-    // if(map->posY-1<map->size && map->game_map[map->posX][map->posY-1]==0)
-    // {
-    //     remove_element(arr,array_size,0);
-    // }
 }
 
 int check_obstacle_already_used(int arr[],int array_size)
@@ -315,88 +297,53 @@ void new_squares(Map*map)
         remove_element(arr,&array_size,4);
     }
 
-    if(is_within_radius(map->posX, map->posY, map->posX_shop, map->posY_shop, 2)==1)
+    if(is_within_radius(map->posX, map->posY, map->posX_last_fight, map->posY_last_fight, 2) == 0)
     {
-        printf("posX_shop=%d posY_shop=%d\n",map->posX_shop,map->posY_shop);
+        remove_element(arr,&array_size,1);
+        remove_element(arr,&array_size,3);
         remove_element(arr,&array_size,4);
     }
 
-
-    if(is_within_radius(map->posX, map->posY, map->posX_last_fight, map->posY_last_fight, 1)==1)
+    if(is_within_radius(map->posX, map->posY, map->posX_shop, map->posY_shop, 5)==1)
     {
-        remove_element(arr,&array_size,2);
+        remove_element(arr,&array_size,4);
     }
-
-    int is_forced_battle = is_within_radius(map->posX, map->posY, map->posX_last_fight, map->posY_last_fight, 3) == 0;
-    // if(is_forced_battle==1)
-    //     {
-    //         printf("\n FORCED BATTLE ! \n");
-    //     }
-
 
     //UP SQUARE
     if(map->posX-1>=0 && map->game_map[map->posX-1][map->posY] < 0)
     {
-        if(is_forced_battle==1)
-        {
-            forced_battle(map,map->posX-1,map->posY);
-        }
-        else
-        {
-            int r = rand() % array_size;
-            map->game_map[map->posX-1][map->posY] = arr[r];
-            // printf("UP SQUARE");
-            possilbe_squares(map, map->posX-1, map->posY, r, arr, &array_size);
-        }
+        int r = rand() % array_size;
+        map->game_map[map->posX-1][map->posY] = arr[r];
+
+        possilbe_squares(map, map->posX-1, map->posY, r, arr, &array_size);
     }
 
     //DOwN SQUARE
     if(map->posX+1<map->size && map->game_map[map->posX+1][map->posY] < 0)
     {
-        if(is_forced_battle==1)
-        {
-            forced_battle(map,map->posX+1,map->posY);
-        }
-        else
-        {
-            int r = rand() % array_size;
-            map->game_map[map->posX+1][map->posY] = arr[r];
-            // printf("DOWN SQUARE");
-            possilbe_squares(map, map->posX+1, map->posY, r, arr, &array_size);
-        }
+        int r = arr[rand() % array_size];
+        map->game_map[map->posX+1][map->posY] = r;
+
+        possilbe_squares(map, map->posX+1, map->posY, r, arr, &array_size);
     }
 
     //LEFT SQUARE
     if(map->posY-1 >= 0 && map->game_map[map->posX][map->posY-1] < 0)
     {
-        if(is_forced_battle==1)
-        {
-            forced_battle(map,map->posX,map->posY-1);
-        }
-        else
-        {
-            int r = rand() % array_size;
-            map->game_map[map->posX][map->posY-1] = arr[r];
-            // printf("LEFT SQUARE");
-            possilbe_squares(map, map->posX, map->posY-1, r, arr, &array_size);
-        }
+        int r = arr[rand() % array_size];
+        map->game_map[map->posX][map->posY-1] = r;
+
+        possilbe_squares(map, map->posX, map->posY-1, r, arr, &array_size);
     }
 
     //RIGHT SQUARE
     if(map->posY+1 < map->size && map->game_map[map->posX][map->posY+1] < 0)
     {
-        if(is_forced_battle==1)
-        {
-            forced_battle(map,map->posX,map->posY+1);
-        }
-        else
-        {
-            int r = rand() % array_size;
-            map->game_map[map->posX][map->posY+1] = arr[r];
-            // printf("RIGHT SQUARE");
-            possilbe_squares(map, map->posX, map->posY+1, r, arr, &array_size);
-        }
 
+        int r = arr[rand() % array_size];
+
+        map->game_map[map->posX][map->posY+1] = r;
+        possilbe_squares(map, map->posX, map->posY+1, r, arr, &array_size);
     }
 
     // printf("\n");
@@ -419,13 +366,15 @@ void loot(Map*map, Character*player)
 {
     srand(time(NULL));
     int distance=(sqrt((map->posX)*(map->posX)+(map->posY)*(map->posY)))/1.3;
-    int r = rand()%2;
+    int r = rand()%3;
+
     if(r==0)
-    {   
+    {
         int random_gold = (rand()%((distance+1)*10));
         player->gold += random_gold;
-        printf("You found %d gold coins !",random_gold);
-        sleep(1);
+        system("clear");
+        printf("You found %d gold coins !\n",random_gold);
+        sleep(2);
     }
     if(r==1)
     {
@@ -450,7 +399,35 @@ void loot(Map*map, Character*player)
 
             printf("\n weapon 0 in inventory: %s\n",player->inventory->weapons[player->inventory->num_weapons-1]->weapon_name);
         }
+    }
+    if(r==2)
+    {
+        int random_id = (rand() % 3) + distance;
+        Armor*random_armor=armor_from_csv(random_id);
+        printf("You found a %s!\n\n", random_armor->armor_name);
+        sleep(1);
+        armor_stat(random_armor);
+        printf("\nDo you want to take it ?\n");
+        sleep(1);
+        printf("1. Yes\n2. No\n\n");
 
+        int input;
+
+        scanf("%d",&input);
+
+        if(input==1)
+        {
+            if((player->inventory->num_armors) + (player->inventory->num_weapons) < 10)
+            {
+                player->inventory->armors[player->inventory->num_armors] = random_armor;
+                player->inventory->num_armors+=1;
+                printf("\nYou obtained %s!",random_armor->armor_name);
+            }
+            else
+            {
+                printf("Inventory full!");
+            }
+        }
 
         sleep(1);
     }

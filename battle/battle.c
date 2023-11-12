@@ -45,6 +45,15 @@ void character_attack(Character *character, Monster *monster) {
     sleep(1);
 }
 
+void spell_damage(Spell*spell, Monster *monster)
+{
+    if(spell->damage>0)
+    {
+        monster->life -= spell->damage;
+        printf("You used %s on %s and inflicted %d damages!\n", spell->spell_name, monster->name, spell->damage);
+    }
+}
+
 
 void monster_attack(Character *character, Monster *monster) {
     if(monster_is_alive(monster)==0)
@@ -127,7 +136,7 @@ void print_player_turn(Character*player)
     printf("\n");
 }
 
-void player_turn(Character *player, Monster**wave, int wave_size)
+void player_turn(Character *player, Monster**wave, int wave_size, int*effects, int*effects_duration)
 {
     int action_points = 10;
     int end_of_turn = 0;
@@ -145,7 +154,7 @@ void player_turn(Character *player, Monster**wave, int wave_size)
         {
             input=10;
             while(input != 0 && action_points !=0 && wave_is_alive(wave,wave_size)==1)
-            {   system("clear");
+            {   system("cls");
                 print_wave_monsters(wave,wave_size);
                 printf("========================================== \n\n");
                 printf("%d PV || %d MANA || %d Action points\n\n",player->current_health, player->current_mana, action_points);
@@ -158,6 +167,62 @@ void player_turn(Character *player, Monster**wave, int wave_size)
                 }
             }
         }
+
+        if(input==2)
+        {
+            input=10;
+            while(input != 0 && action_points !=0 && wave_is_alive(wave,wave_size)==1)
+            {
+                system("cls");
+                print_wave_monsters(wave,wave_size);
+                printf("========================================== \n\n");
+                printf("%d PV || %d MANA || %d Action points\n\n",player->current_health, player->current_mana, action_points);
+
+                printf("Select a spell! (0 to go back)\n\n");
+                for(int i=1; i<=3; i++)
+                {
+                    Spell*spell = spell_from_csv(player->spells[i-1]);
+                    printf("%i. %s\n",i,spell->spell_name);
+                }
+                printf("\n");
+                scanf("%d",&input);
+
+                if(input>0&&input<=3)
+                {
+                    if(input!=0 && input <= wave_size)
+                    {
+                        Spell*spell = spell_from_csv(player->spells[input-1]);
+
+                        int n_targets = spell->n_targets;
+                        while(n_targets>0)
+                        {
+                            system("cls");
+                            print_wave_monsters(wave,wave_size);
+                            printf("========================================== \n\n");
+                            printf("%d PV || %d MANA || %d Action points\n\n",player->current_health, player->current_mana, action_points);
+                            printf("Select a taget!\n\n");
+                            scanf("%d", &input);
+                            spell_damage(spell,wave[input-1]);
+                            effects[input-1]=spell->effect_id;
+                            effects_duration[input-1]=stat_effect(input-1, "duration");
+
+                            for(int i; i< wave_size; i++)
+                            {
+                                printf("%d ",effects_duration[i]);
+                            }
+                            printf("\n");
+
+                            action_points-=1;
+                            n_targets-=1;
+                            sleep(1);
+                        }
+                        player->current_mana-= spell->cost;
+                    }
+                }
+            }
+
+        }
+
         if(input==4)
         {
             end_of_turn=1;
@@ -176,32 +241,115 @@ void player_turn(Character *player, Monster**wave, int wave_size)
     }
 }
 
-void monsters_turn(Character*player, Monster**wave, int wave_size)
+void effect_on_monster(int index, Monster*monster)
+{
+    FILE *file = fopen("csv_files/spells/effects.csv", "r");
+    if (file == NULL) {
+        perror("Error opening file");
+        exit(EXIT_FAILURE);
+    }
+
+    char line[256];
+    int current_index = 0;
+
+    while (fgets(line, sizeof(line), file)) {
+        if (current_index == index) {
+            int id; int duration; int damage; int damage_reduction; int defense_reduction; int freeze;
+            char name[50];
+            char description[50];
+
+            if (sscanf(line, "%d,%49[^,],%49[^,],%d,%d,%d,%d,%d,%d", &id, name, description, &duration, &damage, &damage_reduction, &defense_reduction, &freeze) == 8)
+            {
+                fclose(file);
+
+                if(damage>0)
+                {
+                    monster->life-=damage;
+                    printf("%s took %d damages from %s!\n\n",monster->name, damage, name);
+                }
+
+
+            } else {
+                fclose(file);
+                perror("Error parsing CSV line");
+                exit(EXIT_FAILURE);
+            }
+        }
+
+        current_index+=1;
+    }
+
+    fclose(file);
+}
+
+void monsters_turn(Character*player, Monster**wave, int wave_size, int*effects, int*effects_duration)
 {
     for(int i=0;i<wave_size;i++)
     {
         if(monster_is_alive(wave[i]))
         {
             monster_attack(player,wave[i]);
+
             sleep(1);
+            if(effects_duration[i]>0)
+            {
+                effect_on_monster(effects[i-1],wave[i]);
+                // for(int i=0; i<wave_size; i++)
+                // {
+                //     printf("%d ",effects_duration[i]);
+                // }
+                // effects_duration[i]-=1;
+                // if(effects_duration[i]==0)
+                // {
+                //     effects[i]=0;
+                // }
+            }
         }
+        sleep(1);
     }
-    sleep(1);
+}
+
+int *effects_tab(int wave_size)
+{
+    int *effects_duration = (int*)malloc(wave_size * sizeof(int)); // Allouer de la mémoire
+
+    for (int i = 0; i < wave_size; i++) {
+        effects_duration[i] = 0;
+    }
+    return effects_duration;
 }
 
 void wave_battle(Character*player, int distance, char *filename)
 {
     system("clear");
+
     int wave_size = 3;
     Monster**wave =generate_wave_monsters(filename, distance, distance+3, wave_size);
 
-    while(wave_is_alive(wave,wave_size)==1)
+    int*effects=effects_tab(wave_size);
+    int*effects_duration=effects_tab(wave_size);
+
+
+    int exp_reward = 0;
+    for(int i=0; i<wave_size; i++)
     {
-        player_turn(player,wave,wave_size);
-        monsters_turn(player,wave,wave_size);
+        exp_reward += (wave[i]->level) * 10 * ((wave[i]->level)/(player->level));
+    }
+
+    while(wave_is_alive(wave,wave_size)==1 && player->current_health>0)
+    {
+        player_turn(player,wave,wave_size,effects,effects_duration);
+        monsters_turn(player,wave,wave_size, effects, effects_duration);
     }
     system("clear");
     printf("Wave finished!\n");
+    sleep(1);
+
+    player->exp += exp_reward;
+    printf("\nYou earned %d exp!\n",exp_reward);
+
+    reaward_exp_gain(player,exp_reward);
+
     sleep(1);
 }
 

@@ -25,6 +25,9 @@ typedef struct {
     Spell *offensive_spell;
     Spell *defensive_spell;
     Spell *heal_spell;
+
+    int *spells;
+
     Inventory *inventory;
 
 } Character;

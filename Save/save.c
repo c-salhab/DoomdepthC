@@ -47,7 +47,7 @@ int save_file(Character *character, int ** matrix, int posX, int posY) {
     int error = 0;
     int rc;
 
-    error = sqlite3_open("testt.db", &db);
+    error = sqlite3_open("final.db", &db);
     if (error) {
         fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
         return (1);
@@ -100,7 +100,7 @@ int save_file(Character *character, int ** matrix, int posX, int posY) {
 
 
 
-    sql_query = "INSERT INTO inv (name, descr, val, dura, type, Id_1) VALUES (?, ?, ?, ?, 2, ?)";
+    sql_query = "INSERT INTO inv (name, descr, val, dura, type, Id_1, lvl) VALUES (?, ?, ?, ?, 2, ?, ?)";
 
     error = sqlite3_prepare_v2(db, sql_query, -1, &res, 0);
     if (error != SQLITE_OK) {
@@ -116,6 +116,7 @@ int save_file(Character *character, int ** matrix, int posX, int posY) {
             sqlite3_bind_int(res, 3, character->inventory->armors[i]->physical_defense);
             sqlite3_bind_int(res, 4, character->inventory->armors[i]->durability);
             sqlite3_bind_int(res, 5, idplayer);
+            sqlite3_bind_int(res, 6, character->inventory->armors[i]->level);
 
 
             error = sqlite3_step(res);
@@ -128,7 +129,7 @@ int save_file(Character *character, int ** matrix, int posX, int posY) {
         }
     }
 
-    sql_query = "INSERT INTO inv (name, descr, val, dura, type, Id_1) VALUES (?, ?, ?, ?, 1, ?)";
+    sql_query = "INSERT INTO inv (name, descr, val, dura, type, Id_1, lvl) VALUES (?, ?, ?, ?, 1, ?, ?)";
 
     error = sqlite3_prepare_v2(db, sql_query, -1, &res, 0);
     if (error != SQLITE_OK) {
@@ -144,6 +145,7 @@ int save_file(Character *character, int ** matrix, int posX, int posY) {
             sqlite3_bind_int(res, 3, character->inventory->weapons[i]->physical_damage);
             sqlite3_bind_int(res, 4, character->inventory->weapons[i]->durability);
             sqlite3_bind_int(res, 5, idplayer);
+            sqlite3_bind_int(res, 6, character->inventory->weapons[i]->level);
 
 
             error = sqlite3_step(res);

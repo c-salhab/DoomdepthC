@@ -145,6 +145,9 @@ void display_menu() {
     Character *character = init_character(name, 1000, 1000, 1, 0, 0);
     Weapon*weapon = weapon_from_csv(0);
     set_equipped_weapon(character, weapon);
+    character->spells[0]=0;
+    character->spells[1]=1;
+    character->spells[2]=2;
 
 
 
@@ -241,7 +244,7 @@ int display_save() {
     sqlite3_stmt *res;
     int error = 0;
 
-    error = sqlite3_open("testt.db", &db);
+    error = sqlite3_open("final.db", &db);
     if (error) {
         fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
         return (1);
@@ -273,7 +276,7 @@ int load_save(int selectedSave) {
     sqlite3_stmt *res;
     int rc = 0;
 
-    rc = sqlite3_open("testt.db", &db);
+    rc = sqlite3_open("final.db", &db);
     if (rc) {
         fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
         return (1);
@@ -350,7 +353,7 @@ int load_save(int selectedSave) {
         const unsigned char *armor_name = sqlite3_column_text(res, 1);
         const unsigned char *description = sqlite3_column_text(res, 2);
 
-        Armor * arm = create_armor((char *)armor_name, (char *)description, sqlite3_column_int(res, 3), sqlite3_column_int(res, 4));
+        Armor * arm = create_armor(0,(char *)armor_name, (char *)description, sqlite3_column_int(res, 3), sqlite3_column_int(res, 4), sqlite3_column_int(res, 5));
         //set_armor(character,arm);
 
         character->inventory->armors[character->inventory->num_armors] = arm;
@@ -400,6 +403,10 @@ int load_save(int selectedSave) {
     Map*map=init_custom_map(posX, posY, fileName);
 
 
+
+    character->spells[0]=0;
+    character->spells[1]=1;
+    character->spells[2]=2;
 
     // infinite loop for displaying the menu and handling user choices
     while (1) {
@@ -453,7 +460,7 @@ int load_save(int selectedSave) {
 
 
 
-                const char *sql_query = "INSERT INTO player (name, posX, posY, level, xp, pv, mana, gold) VALUES (?, 0, 0, ?, ?, ?, ?, ?)";
+                const char *sql_query = "INSERT INTO player (name, posX, posY, level, xp, pv, mana, gold) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
                 error = sqlite3_prepare_v2(db, sql_query, -1, &res, 0);
                 if (error != SQLITE_OK) {
@@ -464,11 +471,13 @@ int load_save(int selectedSave) {
 
 
                 sqlite3_bind_text(res, 1, character->username, -1, SQLITE_STATIC);
-                sqlite3_bind_int(res, 2, character->level);
-                sqlite3_bind_int(res, 3, character->exp);
-                sqlite3_bind_int(res, 4, character->current_health);
-                sqlite3_bind_int(res, 5, character->current_mana);
-                sqlite3_bind_int(res, 6, character->gold);
+                sqlite3_bind_int(res, 2, posX);
+                sqlite3_bind_int(res, 3, posY);
+                sqlite3_bind_int(res, 4, character->level);
+                sqlite3_bind_int(res, 5, character->exp);
+                sqlite3_bind_int(res, 6, character->current_health);
+                sqlite3_bind_int(res, 7, character->current_mana);
+                sqlite3_bind_int(res, 8, character->gold);
 
                 error = sqlite3_step(res);
                 if (error != SQLITE_DONE) {
@@ -498,7 +507,7 @@ int load_save(int selectedSave) {
 
 
 
-                sql_query = "INSERT INTO inv (name, descr, val, dura, type, Id_1) VALUES (?, ?, ?, ?, 2, ?)";
+                sql_query = "INSERT INTO inv (name, descr, val, dura, type, Id_1, lvl) VALUES (?, ?, ?, ?, 2, ?, ?)";
 
                 error = sqlite3_prepare_v2(db, sql_query, -1, &res, 0);
                 if (error != SQLITE_OK) {
@@ -514,6 +523,7 @@ int load_save(int selectedSave) {
                         sqlite3_bind_int(res, 3, character->inventory->armors[i]->physical_defense);
                         sqlite3_bind_int(res, 4, character->inventory->armors[i]->durability);
                         sqlite3_bind_int(res, 5, idplayer);
+                        sqlite3_bind_int(res, 6, character->inventory->armors[i]->level);
 
 
                         error = sqlite3_step(res);
@@ -526,7 +536,7 @@ int load_save(int selectedSave) {
                     }
                 }
 
-                sql_query = "INSERT INTO inv (name, descr, val, dura, type, Id_1) VALUES (?, ?, ?, ?, 1, ?)";
+                sql_query = "INSERT INTO inv (name, descr, val, dura, type, Id_1, lvl) VALUES (?, ?, ?, ?, 1, ?, ?)";
 
                 error = sqlite3_prepare_v2(db, sql_query, -1, &res, 0);
                 if (error != SQLITE_OK) {
@@ -542,6 +552,7 @@ int load_save(int selectedSave) {
                         sqlite3_bind_int(res, 3, character->inventory->weapons[i]->physical_damage);
                         sqlite3_bind_int(res, 4, character->inventory->weapons[i]->durability);
                         sqlite3_bind_int(res, 5, idplayer);
+                        sqlite3_bind_int(res, 6, character->inventory->weapons[i]->level);
 
 
                         error = sqlite3_step(res);
@@ -554,7 +565,11 @@ int load_save(int selectedSave) {
                     }
                 }
 
+                //save map
+                char fileName[40];
+                sprintf(fileName, "%s%02d%s", FILENAME_PREFIX, idplayer, FILENAME_SUFFIX);
 
+                saveMapToCSV(fileName, map->game_map, 20 ,20);
 
                 sqlite3_finalize(res);
                 break;

@@ -46,6 +46,8 @@ Character *init_character(char *name, float current_health, float current_mana, 
     // initialize the healing spell as null
     character->heal_spell = NULL;
 
+    character->spells = malloc(sizeof(int)*3);
+
     // allocate memory for the character's inventory
     character->inventory = (Inventory *)malloc(sizeof(Inventory));
     // initialize the equipped weapon and armor in the character's inventory as null
@@ -480,6 +482,37 @@ void gain_exp(Character *character){
     if (character->exp >= exp_needed_to_level_up) {
         // call the has_leveled_up function to handle level-up logic
         has_leveled_up(character);
+    }
+}
+
+
+void reaward_exp_gain(Character *player, int reward_exp)
+{
+    int n_level_up = 0;
+    int exp_needed = player->level*50;
+
+    while(reward_exp>exp_needed)
+    {
+        n_level_up+=1;
+        reward_exp-=exp_needed;
+        exp_needed = (player->level + n_level_up) * 50;
+    }
+
+    player->exp = reward_exp;
+    player->level += n_level_up;
+
+    if(n_level_up>0)
+    {
+        // increase the character's current health and mana by 50%
+        player->current_health += player->current_health * 1.5;
+        player->current_mana += player->current_mana * 1.5;
+
+        // increase the maximum health and mana by 50%
+        max_health += player->current_health;
+        max_mana += player->current_mana;
+
+        printf("\n%s has leveled up !\n", player->username);
+        printf("%s is level %d !\n", player->username, player->level);
     }
 }
 

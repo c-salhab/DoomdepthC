@@ -12,13 +12,14 @@ Projet DoomdepthC
 typedef struct {
     int id;
     char *spell_name;
-    int cost;
+    char *description;
     int damage;
-    int action_point_cost;
-    int level;
+    int cost;
+    int n_targets;
+    int effect_id;
 } Spell;
 
-Spell *create_spell(int id, char *spell_name, int cost, int damage, int action_point_cost, int level);
+Spell *create_spell(int id, char *spell_name, char *description, int damage, int cost, int n_targets, int effect_id);
 //char *get_offensive(Character *character);
 //void set_offensive(Character *character, Spell *selection);
 //void select_offensive_spell(Character *character);

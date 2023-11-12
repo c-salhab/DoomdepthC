@@ -1,0 +1,3 @@
+1,Burn,- Deal 5 damage every turn,3,3,0,0,0
+2,Freeze,- Freeze the monster for 1 turn,1,0,0,0,1
+3,Tired,- Reduce monster attack and defense by 10,3,0,5,5,0
